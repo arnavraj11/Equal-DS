@@ -1,0 +1,63 @@
+{
+  "title": "Choose the site's structure",
+  "question": "The Equal brand is fixed. Pick how the design-system website is organised. You can steer or re-roll.",
+  "options": [
+    {
+      "id": "app-map",
+      "label": "The App Map",
+      "kicker": "THE ROLL",
+      "lineage": "Screen flow maps designers pin on the wall",
+      "thesis": "You find a component by finding it in the real app.",
+      "palette": ["#F7F7F7", "#00B140", "#BAFF29", "#111111"],
+      "materials": ["live 360dp phones", "hover-to-trace hotspots", "docs pages behind each part"],
+      "viewport": "A wide canvas of the real, live Equal AI screens (Chats, Chat, You, the flows) side by side. Hovering any part outlines it and names its component; clicking opens that component's page. The theme switch flips every phone at once.",
+      "risk": "Tokens and icons have no screen to live on, so the foundations need a conventional index next to the map.",
+      "wireframe": { "cols": 12, "rows": 10, "regions": [
+        { "label": "top bar · search · theme", "x": 0, "y": 0, "w": 12, "h": 1 },
+        { "label": "Chats", "x": 0, "y": 1, "w": 3, "h": 7, "accent": true },
+        { "label": "Chat", "x": 3, "y": 1, "w": 3, "h": 7, "accent": true },
+        { "label": "You", "x": 6, "y": 1, "w": 3, "h": 7, "accent": true },
+        { "label": "Flows →", "x": 9, "y": 1, "w": 3, "h": 7 },
+        { "label": "Foundations · Components · Reference index", "x": 0, "y": 8, "w": 12, "h": 2 }
+      ] }
+    },
+    {
+      "id": "command-index",
+      "label": "The Command Index",
+      "lineage": "Command palettes and dense spec indexes",
+      "thesis": "Everything is one keystroke away, and every page answers first.",
+      "palette": ["#FFFFFF", "#111111", "#00B140", "#BAFF29"],
+      "materials": ["⌘K palette", "dense token/component index", "copy-first spec sheets"],
+      "viewport": "A big search field above a dense, sortable index of every token, type style, icon, component and screen. Each result copies its CSS / TS / Kotlin name in one click; pages open as compact spec sheets with the live component on top.",
+      "risk": "Very efficient, but the brand and the app's warmth show less until you open a page.",
+      "wireframe": { "cols": 12, "rows": 10, "regions": [
+        { "label": "⌘K search", "x": 2, "y": 0, "w": 8, "h": 2, "accent": true },
+        { "label": "Colour", "x": 0, "y": 2, "w": 3, "h": 4 },
+        { "label": "Type", "x": 3, "y": 2, "w": 3, "h": 4 },
+        { "label": "Icons", "x": 6, "y": 2, "w": 3, "h": 4 },
+        { "label": "Components", "x": 9, "y": 2, "w": 3, "h": 4 },
+        { "label": "Screens & flows", "x": 0, "y": 6, "w": 12, "h": 4 }
+      ] }
+    },
+    {
+      "id": "docs-shell",
+      "label": "The Reference Manual",
+      "lineage": "Best-in-class product docs (sidebar, page, contents)",
+      "thesis": "A calm, deep reference you can read top to bottom or jump into anywhere.",
+      "palette": ["#F7F7F7", "#FFFFFF", "#00B140", "#111111"],
+      "materials": ["section sidebar", "live example canvases", "on-page contents", "⌘K search"],
+      "viewport": "Left sidebar of every section, a reading column that starts with a live example in light and dark, and a right-hand list of contents. The home page opens with the Equal lockup and a live Chats screen.",
+      "risk": "The most familiar arrangement; it only stands out through the quality of its examples.",
+      "wireframe": { "cols": 12, "rows": 10, "regions": [
+        { "label": "top bar · search · theme", "x": 0, "y": 0, "w": 12, "h": 1 },
+        { "label": "sidebar", "x": 0, "y": 1, "w": 2, "h": 9 },
+        { "label": "live example (light | dark)", "x": 2, "y": 1, "w": 8, "h": 4, "accent": true },
+        { "label": "props · tokens · do / don't", "x": 2, "y": 5, "w": 8, "h": 5 },
+        { "label": "on this page", "x": 10, "y": 1, "w": 2, "h": 9 }
+      ] }
+    }
+  ],
+  "reroll": true,
+  "buildPath": { "value": "code", "toggle": false },
+  "steer": true
+}

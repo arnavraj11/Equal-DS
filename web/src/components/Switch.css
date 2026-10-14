@@ -1,0 +1,24 @@
+.eq-switch {
+  width: 40px;
+  height: 24px;
+  border-radius: var(--eq-radius-full);
+  background: var(--eq-button-disabled);
+  flex-shrink: 0;
+  transition: background-color var(--eq-duration-switchToggle) var(--eq-easing-easeInOut);
+}
+.eq-switch.is-on { background: var(--eq-button-primary); }
+.eq-switch__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--eq-white);
+  box-shadow: var(--eq-shadow-raised);
+  transition: transform var(--eq-duration-switchToggle) var(--eq-easing-easeInOut);
+}
+.eq-switch.is-on .eq-switch__thumb { transform: translateX(16px); }
+.eq-switch:disabled { opacity: 0.5; }
+/* On: thumb follows text/on-action — white on green (light), black on lime (dark), per the dark screens. */
+.eq-switch.is-on .eq-switch__thumb { background: var(--eq-text-on-action); }

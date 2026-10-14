@@ -1,0 +1,30 @@
+// Where the designs disagree or leave gaps, and what the code does. (Moved from the retired Storybook.)
+export type Conflict = { area: string; issue: string; decision: string; tone?: 'warn' | 'neutral' };
+
+export const conflicts: Conflict[] = [
+  { area: 'Dark mode · stroke/*', issue: 'stroke/subtle, medium, dark are #F6F6F6, #F7F7F7, #F8F8F8 in dark mode: near-white lines on a #222 surface.', decision: 'Resolved: dark strokes now follow the dark screens (subtle #2E2E2E, medium #3A3A3A, dark #4A4A4A).' },
+  { area: 'Dark mode · bg/nav-bottom', issue: 'Dark value #F6F6F6 is near-white.', decision: 'Resolved: now grey02 (#222222) in dark, matching the dark screens.' },
+  { area: 'Dark mode · action/fill/unread', issue: 'Same #F0F6E5 in both modes; action/stroke/unread dark is #E0F9AC.', decision: 'Resolved: dark unread chips are #233428 with a #3E5A2A stroke.' },
+  { area: 'Dark mode · bg/overlay', issue: '#9F9F9F / #B5B5B5 are opaque, so they can’t be a scrim over content.', decision: 'Kept as a token; added derived component/scrim (translucent) for sheets & dialogs.' },
+  { area: 'Missing roles', issue: 'Typography inventory uses text-tertiary, accent-gold, on-dark, on-dark-secondary, danger, on-danger. Not in the alias guide.', decision: 'Added as derived alias tokens (text/tertiary = grey07 / grey09, etc.).' },
+  { area: 'Chat-list chip type', issue: 'Handoff shows ~14sp grey labels. Typography v3 says buttonSmall 12sp, brand-green.', decision: 'Typography v3 wins (it states “text that doesn’t match a token is a bug”). Unread chips green, read chips secondary.' },
+  { area: 'Large chip label colour', issue: 'Handoff shows dark text on Takeover / Ask to reschedule. Typography says action chips = button, brand-green.', decision: 'Green (text/action), per the typography colour-role table.' },
+  { area: 'Sender line colour', issue: 'Typography: Equal AI / You sender = brand-green. Alias guide: component/chat-bubble/user-title = #006223.', decision: 'Outgoing bubble uses user-title (#006223); assistant bubble uses text/action.' },
+  { area: 'Destructive button', issue: 'Handoff delete sheet button renders orange-red (~#DD3510). button/danger = #C50000.', decision: 'Token wins: #C50000.' },
+  { area: 'Chat header subtitle', issue: 'Typography: header phone number = caption (12sp) tertiary. Handoff renders it closer to 14sp.', decision: 'caption, tabular, tertiary.' },
+  { area: 'action/bottom_color', issue: 'Underscore in the token name, unlike every other token.', decision: 'Renamed action/bottom-color (--eq-action-bottom-color / actionBottomColor).' },
+  { area: 'Category "Others-1"', issue: 'Others-1.png is a credit-card icon, but its name suggests a second "Others".', decision: 'Kept as category others-1 (label "Others (card)"). Rename if it is really Card / Banking.' },
+  { area: 'Icon family', issue: 'Settings design uses Material Symbols glyphs (note_stack, health_metrics, question_exchange…) that the classic Material Icons set lacks.', decision: 'Whole set switched to Material Symbols Outlined 400, generated for web and Compose from one manifest (scripts/build-icons.mjs).' },
+  { area: 'You · AI Summary body', issue: 'Settings design renders the summary ~16sp Medium with tight leading; Typography v3 says bodyLarge (16/24 Regular).', decision: 'bodyLarge (token). Empty-state line uses bodyLarge at Medium to match the design emphasis.' },
+  { area: 'You · section headers', issue: 'Design shows larger, darker uppercase headers; Typography: overline 11sp text-tertiary.', decision: 'overline token (11sp, tertiary).' },
+  { area: 'You · "Manage plan"', issue: 'Typography inventory: buttonSmall accent-gold. Settings design: white, underlined.', decision: 'Follows the newer Settings design: buttonSmall, on-dark, underlined.' },
+  { area: 'You · AI Summary label', issue: 'Typography: "Your AI Summary" caption brand-green. Settings design: grey beside the orb.', decision: 'Follows the Settings design: caption, text-secondary.' },
+  { area: 'Chat header · live call', issue: 'Handoff #5 shows the more-options icon next to Takeover.', decision: 'Per product direction: Takeover replaces both call and more-options.' },
+  { area: 'Dark mode · real screens vs tokens', issue: 'Flow designs include dark screens: background ≈ #141414 (token bg/primary = #000), cards ≈ #242424 (bg/surface = #222 ✓), dividers ≈ #3A3A3A (stroke/subtle = #F6F6F6).', decision: 'Resolved on your go-ahead: bg/primary is #141414 in dark, strokes are dark greys, sheets #292929, and the switch thumb is dark on lime.' },
+  { area: 'Flow copy typos', issue: '"Your AI will calls you", "Capture enquires", "will not sate a legitimate purpose", address menu says "Delete Instruction".', decision: 'Fixed in code: "will call you", "enquiries", "state", "Delete address".', tone: 'warn' },
+  { area: 'Silent Mode title', issue: 'Light screen is titled "Silent Mode", dark screen "Call Preferences".', decision: 'Resolved: "Silent Mode" everywhere, matching the You-tab row (confirmed by design).' },
+  { area: 'Large chip label colour', issue: 'Earlier I used text/action (green). Every new flow shows dark labels on large chips (Edit / Confirm / Reply on WhatsApp).', decision: 'Large chips now text/primary, with read (grey) and unread (green) states.' },
+  { area: 'Selected label chip', issue: 'Typography spec: selected segmented chip = on-brand (green). Addresses flow: selected chip is dark (#333).', decision: 'Follows the flow: new chip/selected-bg token.' },
+  { area: 'Handoff numbering', issue: 'Sections jump 6 → 9; "12" is used twice; "22 What\'s New" appears twice with identical content.', decision: 'Implemented every unique component. Nothing is missing that the design shows.' },
+  { area: 'Spacing / radius', issue: 'No spacing or radius scale is defined in the designs.', decision: 'Derived from measurements at the 360dp frame (tokens.json → spacing, radius).' },
+];

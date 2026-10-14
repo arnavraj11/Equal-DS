@@ -1,0 +1,48 @@
+.eq-chip-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px 0 8px;
+  border-radius: var(--eq-radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+.eq-chip-sm svg { margin-left: -2px; }
+.eq-chip-sm--unread {
+  background: var(--eq-gradient-chip-small-unread);
+  border-color: var(--eq-action-stroke-unread);
+  box-shadow: var(--eq-shadow-glass);
+  color: var(--eq-text-action);
+}
+.eq-chip-sm--read {
+  background: var(--eq-gradient-chip-small-read);
+  border-color: var(--eq-stroke-subtle);
+  box-shadow: var(--eq-shadow-glass);
+  color: var(--eq-text-secondary);
+}
+.eq-chip-sm--outlined {
+  background: transparent;
+  border-color: var(--eq-action-stroke-unread);
+  color: var(--eq-text-secondary);
+}
+
+.eq-chip-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 12px 0 10px;
+  border-radius: var(--eq-radius-full);
+  background: var(--eq-gradient-chip-large);
+  border: 1px solid var(--eq-action-stroke-unread);
+  color: var(--eq-text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eq-chip-lg--read {
+  background: var(--eq-gradient-chip-small-read);
+  border-color: var(--eq-stroke-subtle);
+  box-shadow: var(--eq-shadow-glass);
+}

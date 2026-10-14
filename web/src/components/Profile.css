@@ -1,0 +1,16 @@
+.eq-action-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 72px;
+  border-radius: 8px;
+  background: var(--eq-bg-surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+[data-theme='dark'] .eq-action-tile { border: 1px solid var(--eq-stroke-subtle); }
+
+/* Contact Info design dark: the history card is outlined and its dividers are a step lighter. */
+[data-theme='dark'] .eq-call-history { border: 1px solid var(--eq-stroke-subtle); }
+[data-theme='dark'] .eq-call-history > * + * { border-top-color: var(--eq-stroke-medium); }

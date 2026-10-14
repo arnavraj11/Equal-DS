@@ -1,0 +1,48 @@
+.eq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  border-radius: var(--eq-radius-full);
+  transition: background-color var(--eq-duration-base) var(--eq-easing-standard), transform var(--eq-duration-fast) var(--eq-easing-standard);
+}
+.eq-btn--rounded { border-radius: var(--eq-radius-sm); }
+.eq-btn--sm { height: 24px; padding: 0 14px; gap: 4px; }
+.eq-btn--md { height: 36px; padding: 0 20px; }
+.eq-btn--lg { height: 45px; padding: 0 24px; }
+.eq-btn--block { display: flex; width: 100%; }
+
+.eq-btn--primary { background: var(--eq-button-primary); color: var(--eq-text-on-action); }
+.eq-btn--secondary { background: var(--eq-button-secondary); color: var(--eq-text-primary); }
+.eq-btn--danger { background: var(--eq-button-danger); color: var(--eq-text-on-danger); }
+/* Monetization: gold commit (Unlock Unlimited, Re-Subscribe) and outline revise (Cancel). */
+.eq-btn--gold { background: var(--eq-gradient-cta-gold); color: #FFFFFF; font-weight: 700; }
+.eq-btn--gold-outline { background: var(--eq-bg-surface); color: var(--eq-text-gold); box-shadow: inset 0 0 0 1.5px var(--eq-text-gold); }
+.eq-btn--outline { background: transparent; color: var(--eq-text-action); box-shadow: inset 0 0 0 1.5px var(--eq-button-primary); }
+.eq-btn:disabled { background: var(--eq-button-disabled); color: var(--eq-text-on-action-disabled); }
+
+.eq-text-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 20px;
+  border-radius: var(--eq-radius-xs);
+}
+.eq-text-btn--action { color: var(--eq-text-action); }
+.eq-text-btn--danger { color: var(--eq-text-danger); }
+.eq-text-btn--neutral { color: var(--eq-text-secondary); }
+.eq-text-btn:disabled { color: var(--eq-text-action-disabled); }
+
+.eq-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.eq-icon-btn--ghost { color: var(--eq-text-primary); }
+.eq-icon-btn--danger-ghost { color: var(--eq-button-danger); }
+.eq-icon-btn--neutral { background: var(--eq-bg-surface); color: var(--eq-text-secondary); box-shadow: var(--eq-shadow-raised); }
+.eq-icon-btn--primary { background: var(--eq-button-primary); color: var(--eq-text-on-action); box-shadow: var(--eq-shadow-raised); }
+.eq-icon-btn:disabled { opacity: 0.4; }

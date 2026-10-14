@@ -1,0 +1,70 @@
+/* Equal AI DS — base layer. Import once in the app root after tokens.css. */
+*, *::before, *::after { box-sizing: border-box; }
+
+.eq-root, [data-theme] {
+  font-family: var(--eq-font-family);
+  color: var(--eq-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+[data-theme] button { font-family: inherit; }
+
+/* Shared helpers */
+.eq-reset-btn {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.eq-reset-btn:focus-visible { outline: none; box-shadow: var(--eq-shadow-focus-ring); }
+.eq-reset-btn:disabled { cursor: default; }
+
+.eq-truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.eq-tnum { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+
+.eq-pressable { transition: transform var(--eq-duration-fast) var(--eq-easing-standard), filter var(--eq-duration-fast); }
+.eq-pressable:not(:disabled):active { transform: scale(0.97); filter: brightness(0.96); }
+
+/* 48dp touch target around a smaller visual */
+.eq-touch { position: relative; }
+.eq-touch::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 48px);
+  height: max(100%, 48px);
+  transform: translate(-50%, -50%);
+}
+
+.eq-divider { height: 1px; background: var(--eq-stroke-subtle); border: 0; margin: 0; width: 100%; }
+
+.eq-hscroll { display: flex; overflow-x: auto; scrollbar-width: none; }
+.eq-hscroll::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme] *, [data-theme] *::before, [data-theme] *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
+
+.eq-row-group > * + * { border-top: 1px solid var(--eq-stroke-subtle); }
+
+/* Equal orb — light file in light mode, lime file in dark mode */
+.eq-orb--dark { display: none; }
+[data-theme='dark'] .eq-orb--dark { display: block; }
+[data-theme='dark'] .eq-orb--light { display: none; }
+[data-theme='light'] .eq-orb--light { display: block; }
+[data-theme='light'] .eq-orb--dark { display: none; }
+
+/* Full-width building blocks span their container even inside flex parents (screens, docs canvases). */
+.eq-chat-header, .eq-home-header, .eq-hero, .eq-field, .eq-search, .eq-composer, .eq-summary-card, .eq-plan { width: 100%; box-sizing: border-box; }
+
+/* Lottie: `tint` recolours a single-colour animation to follow the theme. */
+.eq-lottie--tint svg [fill]:not([fill='none']) { fill: var(--eq-lottie-tint); }
+.eq-lottie--tint svg [stroke]:not([stroke='none']) { stroke: var(--eq-lottie-tint); }

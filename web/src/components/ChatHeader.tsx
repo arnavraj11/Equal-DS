@@ -1,0 +1,128 @@
+import type { ReactNode } from 'react';
+import { Icon } from '../foundations/Icon';
+import { Text } from '../foundations/Text';
+import { AiAvatar, ContactAvatar, type ContactAvatarProps } from './Avatar';
+import { IconButton } from './Button';
+import { Checkbox } from './Checkbox';
+import { AssistantToggle } from './AssistantToggle';
+import { StatusBar } from './StatusBar';
+import { TopBar } from './TopBar';
+import './ChatHeader.css';
+
+export type ChatHeaderProps = {
+  name: string;
+  /** Phone number (tabular) or status line ("You have a visitor"). */
+  subtitle?: string;
+  avatar?: ContactAvatarProps;
+  onBack?: () => void;
+  onCall?: () => void;
+  onMore?: () => void;
+  /** Live call — the Takeover pill replaces the call and more-options buttons. */
+  onTakeover?: () => void;
+  live?: boolean;
+  statusBar?: boolean;
+  /** Equal AI's own chat: the orb instead of a contact avatar. */
+  official?: boolean;
+};
+
+/** In-conversation header (Component ref #5). */
+export function ChatHeader({ name, subtitle, avatar, onBack, onCall, onMore, onTakeover, live, statusBar = false, official }: ChatHeaderProps) {
+  return (
+    <header className="eq-chat-header">
+      {statusBar && <StatusBar background="var(--eq-bg-surface)" />}
+      <div className="eq-chat-header__row">
+        <IconButton icon="arrow-back" label="Back" onClick={onBack} size={36} />
+        {official ? <AiAvatar size={36} /> : <ContactAvatar size={36} {...avatar} />}
+        <div style={{ flex: 1, minWidth: 0, marginLeft: 6 }}>
+          <Text as="div" variant="subheading" truncate>{name}</Text>
+          {subtitle && (
+            <Text as="div" variant="caption" color="tertiary" truncate className={/^[+\d\s()-]+$/.test(subtitle) ? 'eq-tnum' : undefined} style={{ fontWeight: 400 }}>
+              {subtitle}
+            </Text>
+          )}
+        </div>
+        {/* Live call: Takeover replaces both the call and the more-options buttons. */}
+        {live ? (
+          <TakeoverPill onClick={onTakeover} />
+        ) : (
+          <>
+            <IconButton icon="call" label="Call" onClick={onCall} size={36} />
+            <IconButton icon="more-vert" label="More options" onClick={onMore} size={36} />
+          </>
+        )}
+      </div>
+    </header>
+  );
+}
+
+/** Glass "Takeover" pill for a live call. */
+export function TakeoverPill({ onClick, label = 'Takeover' }: { onClick?: () => void; label?: string }) {
+  return (
+    <button type="button" onClick={onClick} className="eq-reset-btn eq-pressable eq-touch eq-takeover">
+      <Icon name="call-filled" size={18} />
+      <span className="eq-t-button">{label}</span>
+    </button>
+  );
+}
+
+export type SelectionHeaderProps = {
+  count: number;
+  allSelected: boolean;
+  onSelectAll?: (all: boolean) => void;
+  onBack?: () => void;
+  onMarkRead?: () => void;
+  onDelete?: () => void;
+  statusBar?: boolean;
+};
+
+/** Selection-mode app bar for the chat list (Component ref #5, last variant). */
+export function SelectionHeader({ count, allSelected, onSelectAll, onBack, onMarkRead, onDelete, statusBar = false }: SelectionHeaderProps) {
+  return (
+    <header className="eq-chat-header eq-chat-header--flat">
+      {statusBar && <StatusBar background="var(--eq-bg-surface)" />}
+      <div className="eq-chat-header__row">
+        <IconButton icon="arrow-back" label="Exit selection" onClick={onBack} />
+        <Text variant="subheading" style={{ flex: 1, marginLeft: 8 }} className="eq-tnum">{`${count} Selected`}</Text>
+        <button type="button" className="eq-reset-btn eq-pressable eq-touch eq-markread" onClick={onMarkRead}>
+          <Icon name="done-all" size={16} color="var(--eq-text-action)" />
+          <span className="eq-t-button-small">Mark read</span>
+        </button>
+        <IconButton icon="delete" label="Delete" variant="danger-ghost" onClick={onDelete} />
+      </div>
+      <div style={{ padding: '0 16px 4px' }}>
+        <Checkbox checked={allSelected} onChange={onSelectAll} label="Select All" />
+      </div>
+    </header>
+  );
+}
+
+export type HomeHeaderProps = {
+  assistantOn: boolean;
+  onAssistantChange?: (on: boolean) => void;
+  plan?: string | null;
+  statusBar?: boolean;
+  trailing?: ReactNode;
+  /** Replaces the assistant toggle, e.g. a SystemStatusCard while Equal AI is down. */
+  status?: ReactNode;
+  /** The toggle's line (default "Equal is managing your unknown calls!"). */
+  assistantDescription?: string;
+  planTone?: 'paid' | 'expired';
+  /** Under the toggle, e.g. the Payment processing card. */
+  below?: ReactNode;
+  /** Toggle art experiment (Component 25): the robot (default) or the phone with sparkles. */
+  assistantArt?: 'robot' | 'phone';
+};
+
+/** Home header: status bar + logo/plan + assistant toggle, on bg/primary with bottom shadow. */
+export function HomeHeader({ assistantOn, onAssistantChange, plan = 'Unlimited', statusBar = true, trailing, status, assistantDescription, planTone, below, assistantArt }: HomeHeaderProps) {
+  return (
+    <header className="eq-home-header">
+      {statusBar && <StatusBar />}
+      <TopBar plan={plan} trailing={trailing} planTone={planTone} />
+      <div style={{ padding: '0 12px 12px' }}>
+        {status ?? <AssistantToggle on={assistantOn} onChange={onAssistantChange} description={assistantDescription} art={assistantArt} />}
+      </div>
+      {below}
+    </header>
+  );
+}

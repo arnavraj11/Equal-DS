@@ -1,0 +1,234 @@
+/* Monetization (Monetization Flow design). DM Sans only. */
+
+/* Soft concentric rings drawn behind 3D art (hero, status cards, unlock card). */
+.eq-rings { background-image: repeating-radial-gradient(circle at 50% 38%, transparent 0 34px, rgba(255, 255, 255, 0.55) 35px 36px, transparent 37px 52px); }
+
+.eq-gold-text {
+  background: var(--eq-gradient-gold-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------- locked content */
+.eq-locked { position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
+.eq-locked.is-inline { display: flex; width: 100%; }
+.eq-locked__content { filter: blur(4px); user-select: none; pointer-events: none; min-width: 0; overflow: hidden; }
+.eq-locked.is-inline .eq-locked__content { flex: 1; white-space: nowrap; text-overflow: ellipsis; }
+.eq-locked__badge { position: absolute; right: -6px; bottom: -8px; display: inline-flex; padding: 2px; border-radius: 50%; background: var(--eq-locked-badge-bg); }
+.eq-locked.is-inline .eq-locked__badge { position: static; background: none; padding: 0; }
+.eq-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.eq-divider-label { display: flex; align-items: center; gap: 12px; align-self: stretch; }
+.eq-divider-label__rule { flex: 1; height: 1px; background: var(--eq-paywall-divider); }
+
+/* ---------------------------------------------------------------- paywall hero */
+.eq-paywall-hero { position: relative; background: var(--eq-gradient-paywall-hero); padding-bottom: 8px; }
+.eq-paywall-hero::before { content: ''; position: absolute; inset: 0 0 auto; height: 420px; pointer-events: none; background-image: repeating-radial-gradient(circle at 50% 120px, transparent 0 46px, rgba(255, 255, 255, 0.5) 47px 48px, transparent 49px 70px); -webkit-mask-image: linear-gradient(#000, transparent); mask-image: linear-gradient(#000, transparent); }
+[data-theme='dark'] .eq-paywall-hero::before { opacity: 0.25; }
+.eq-paywall-hero__bar { position: relative; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 4px; }
+.eq-paywall-hero__bar .eq-icon-btn { background: transparent; box-shadow: none; }
+.eq-paywall-support { display: inline-flex; align-items: center; gap: 6px; color: var(--eq-text-primary); padding: 0 6px; }
+.eq-paywall-hero__head { position: relative; display: flex; flex-direction: column; align-items: center; padding: 0 24px; }
+.eq-paywall-hero__body { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 20px 16px 8px; }
+
+.eq-price { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.eq-price__row { display: flex; align-items: center; gap: 16px; width: 100%; }
+.eq-price__rule { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--eq-paywall-divider)); }
+.eq-price__rule:last-child { background: linear-gradient(270deg, transparent, var(--eq-paywall-divider)); }
+.eq-price__value { font-size: 44px; line-height: 48px; }
+
+.eq-paywall-card { padding: 8px; border-radius: 20px; background: var(--eq-paywall-card-bg); border: 1px solid var(--eq-paywall-card-stroke); }
+.eq-paywall-card__inner { border-radius: 14px; background: var(--eq-bg-surface); border: 1px solid var(--eq-paywall-card-stroke); overflow: hidden; }
+
+/* ---------------------------------------------------------------- coupon */
+.eq-coupon {
+  position: relative;
+  border-radius: 20px;
+  padding: 14px 16px 12px;
+  background: var(--eq-gradient-coupon);
+  border: 1px solid var(--eq-paywall-card-stroke);
+  /* the two ticket notches */
+  -webkit-mask: radial-gradient(circle 9px at 0 58%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 58%, transparent 98%, #000) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle 9px at 0 58%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 58%, transparent 98%, #000) right / 51% 100% no-repeat;
+}
+.eq-coupon__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.eq-coupon__state { color: var(--eq-text-gold); font-weight: 700; padding-top: 4px; }
+.eq-coupon__rule { display: flex; align-items: center; gap: 10px; margin: 6px 0 2px; }
+.eq-coupon__rule > span { flex: 1; border-top: 1px dashed var(--eq-paywall-divider); }
+.eq-coupon__discount { text-align: center; font-size: 30px; line-height: 36px; }
+
+/* ---------------------------------------------------------------- FAQ */
+.eq-faq { display: flex; flex-direction: column; gap: 14px; }
+.eq-faq__card { border-radius: 16px; background: var(--eq-bg-surface); border: 1px solid var(--eq-stroke-subtle); overflow: hidden; }
+.eq-faq__item + .eq-faq__item { border-top: 1px solid var(--eq-stroke-subtle); }
+.eq-faq__q { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; text-align: left; color: var(--eq-text-primary); }
+
+.eq-paywall-footer { padding: 12px 16px 16px; background: var(--eq-bg-surface); box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.05); }
+
+/* ---------------------------------------------------------------- status cards & sheets */
+.eq-status-card { position: relative; display: flex; flex-direction: column; align-items: center; padding: 18px 16px 18px; border-radius: 20px; border: 1px solid var(--eq-stroke-subtle); overflow: hidden; }
+.eq-status-card::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-radial-gradient(circle at 50% 70px, transparent 0 40px, rgba(255, 255, 255, 0.6) 41px 42px, transparent 43px 62px); -webkit-mask-image: linear-gradient(#000 40%, transparent 70%); mask-image: linear-gradient(#000 40%, transparent 70%); }
+[data-theme='dark'] .eq-status-card::before { opacity: 0.2; }
+.eq-status-card.is-neutral { background: var(--eq-gradient-status-neutral); }
+.eq-status-card.is-success { background: var(--eq-gradient-status-success); }
+.eq-status-card.is-warning { background: var(--eq-gradient-status-warning); }
+.eq-status-card.is-danger { background: var(--eq-gradient-status-danger); }
+.eq-status-card.is-gold { background: var(--eq-gradient-status-gold); }
+.eq-status-card__art, .eq-status-card__title { position: relative; }
+.eq-status-card__title { margin-top: 10px; display: flex; flex-direction: column; align-items: center; }
+
+.eq-status-sheet { background: var(--eq-bg-surface); border-radius: 24px 24px 0 0; padding: 12px 12px 20px; box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12); }
+.eq-status-sheet.is-inline { border-radius: 24px; }
+.eq-status-sheet__footer { padding: 16px 8px 0; }
+.eq-status-sheet-layer { position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; justify-content: flex-end; }
+.eq-status-sheet-layer__scrim { position: absolute; inset: 0; background: var(--eq-scrim); }
+.eq-status-sheet-layer .eq-status-sheet { position: relative; animation: eq-sheet-up var(--eq-duration-slow) var(--eq-easing-standard) both; }
+@keyframes eq-sheet-up { from { transform: translateY(40%); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .eq-status-sheet-layer .eq-status-sheet { animation: none; } }
+
+.eq-help-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 12px 12px 16px; border-radius: 14px; border: 1px solid var(--eq-stroke-subtle); text-align: left; }
+.eq-help-row__icon { width: 52px; height: 36px; border-radius: 999px; background: var(--eq-action-card-highlight); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* ---------------------------------------------------------------- touchpoints */
+.eq-unlock-card { position: relative; display: flex; flex-direction: column; align-items: center; padding: 16px 16px 18px; border-radius: 20px; background: var(--eq-gradient-status-gold); box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.08); overflow: hidden; }
+.eq-unlock-card::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: repeating-radial-gradient(circle at 50% 40px, transparent 0 30px, rgba(255, 255, 255, 0.6) 31px 32px, transparent 33px 48px); -webkit-mask-image: linear-gradient(#000 30%, transparent 75%); mask-image: linear-gradient(#000 30%, transparent 75%); }
+.eq-unlock-card > * { position: relative; }
+
+.eq-unlock-audio { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 16px; border-radius: 999px; background: var(--eq-button-primary); color: var(--eq-text-on-action); box-shadow: 0 6px 16px color-mix(in srgb, var(--eq-button-primary) 30%, transparent); }
+
+.eq-plan-banner { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--eq-plan-banner-bg); color: var(--eq-plan-banner-text); }
+.eq-plan-banner.is-attached { margin: -14px 8px 0; padding-top: 20px; border-radius: 0 0 14px 14px; }
+
+/* ---------------------------------------------------------------- subscription page */
+.eq-stat { font-size: 52px; line-height: 56px; letter-spacing: -0.04em; }
+.eq-rating-pill { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 10px; background: var(--eq-bg-surface); border: 1px solid var(--eq-paywall-card-stroke); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); }
+.eq-testimonials__track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 16px 4px; scrollbar-width: none; }
+.eq-testimonial { flex: 0 0 240px; scroll-snap-align: start; margin: 0; padding: 14px; border-radius: 16px; background: var(--eq-bg-surface); border: 1px solid var(--eq-stroke-subtle); display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+.eq-testimonial figcaption { display: flex; align-items: center; gap: 10px; }
+.eq-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+.eq-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--eq-stroke-medium); }
+.eq-dots span.is-on { background: var(--eq-text-gold); }
+
+.eq-cancel-reason { width: 100%; box-sizing: border-box; resize: none; border-radius: 12px; border: 1px solid var(--eq-stroke-subtle); background: var(--eq-bg-surface); color: var(--eq-text-primary); padding: 12px 14px; font: inherit; }
+.eq-cancel-reason:focus { outline: none; border-color: var(--eq-action-stroke-unread); }
+
+
+/* Animated crown: turntable sway + float (stand-in for the rotating-crown video). */
+.eq-crown { display: inline-flex; perspective: 300px; flex-shrink: 0; }
+.eq-crown > * { transform-origin: 50% 60%; }
+.eq-crown.is-animated > * { animation: eq-crown-turn 4.8s ease-in-out infinite; filter: drop-shadow(0 6px 10px rgba(140, 88, 23, 0.25)); }
+@keyframes eq-crown-turn {
+  0%, 100% { transform: translateY(0) rotateY(-20deg) rotateZ(-2deg); }
+  50% { transform: translateY(-4px) rotateY(20deg) rotateZ(2deg); }
+}
+@media (prefers-reduced-motion: reduce) { .eq-crown.is-animated > * { animation: none; } }
+
+/* ---------------------------------------------------------------- local components (Monetization local components design) */
+/* Price drop: the old price is struck, then the new price lands with the list price beside it. */
+.eq-price__now { display: inline-flex; align-items: baseline; gap: 6px; animation: eq-price-land var(--eq-duration-priceDrop) var(--eq-easing-standard) both; }
+.eq-price__was { display: inline-flex; align-items: baseline; gap: 2px; color: var(--eq-text-secondary); font-size: 14px; }
+.eq-price__was s { font-weight: 500; }
+.eq-price__old { position: relative; }
+.eq-price__strike { position: absolute; left: -4%; top: 52%; height: 3px; width: 108%; border-radius: 2px; background: var(--eq-text-gold); transform-origin: left; transform: scaleX(0); }
+.eq-price.is-strike .eq-price__strike { animation: eq-strike 450ms var(--eq-easing-standard) forwards; }
+@keyframes eq-strike { to { transform: scaleX(1); } }
+@keyframes eq-price-land { from { opacity: 0; transform: translateY(6px) scale(0.96); } to { opacity: 1; transform: none; } }
+
+.eq-discount-badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px 2px 2px; border-radius: 999px; background: var(--eq-bg-surface); color: var(--eq-text-brand); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); }
+.eq-discount-badge.is-animated { animation: eq-badge-pop var(--eq-duration-couponSpring) var(--eq-easing-spring) 120ms both; }
+.eq-discount-badge.is-animated .eq-off-seal { animation: eq-seal-spin var(--eq-duration-couponSpring) var(--eq-easing-spring) 120ms both; }
+@keyframes eq-badge-pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+@keyframes eq-seal-spin { from { transform: rotate(-90deg); } to { transform: none; } }
+
+/* Gold CTA: a sheen sweeps across every few seconds. */
+.eq-btn--gold { position: relative; overflow: hidden; }
+.eq-btn--gold::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 48%, transparent 66%); transform: translateX(-120%); animation: eq-sheen calc(var(--eq-duration-shimmerDelay) + var(--eq-duration-shimmer)) var(--eq-easing-standard) infinite; pointer-events: none; }
+/* Button Glow (prototype): the glow eases up over 300ms after 800ms, then back. */
+.eq-btn--gold { animation: eq-gold-glow calc(2 * (var(--eq-duration-buttonGlowDelay) + var(--eq-duration-buttonGlow))) var(--eq-easing-standard) infinite; }
+@keyframes eq-gold-glow { 0%, 36% { box-shadow: 0 4px 12px rgba(140, 88, 23, 0.18); } 50%, 86% { box-shadow: 0 6px 22px rgba(184, 138, 69, 0.45); } 100% { box-shadow: 0 4px 12px rgba(140, 88, 23, 0.18); } }
+.eq-btn--gold:disabled::after { display: none; }
+@keyframes eq-sheen { 0%, 66% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+
+/* Payment progress: each step's title rises in. */
+.eq-status-sheet .eq-status-card__title { animation: eq-step-in var(--eq-duration-paymentStatus) var(--eq-easing-gentle) both; }
+@keyframes eq-step-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Ray burst behind success art. */
+.eq-sunburst { position: absolute; left: 50%; top: 70px; width: 560px; height: 560px; margin: -280px 0 0 -280px; pointer-events: none; border-radius: 50%;
+  background: repeating-conic-gradient(var(--eq-sunburst-ray) 0 calc(var(--eq-sunburst-step) / 2), transparent 0 var(--eq-sunburst-step));
+  -webkit-mask-image: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 30%, transparent 62%); mask-image: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 30%, transparent 62%);
+  animation: eq-sunburst-turn var(--eq-duration-reward) var(--eq-easing-linear) infinite; }
+@keyframes eq-sunburst-turn { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-price__now, .eq-discount-badge.is-animated, .eq-discount-badge.is-animated .eq-off-seal, .eq-status-sheet .eq-status-card__title { animation: none; }
+  .eq-btn--gold::after, .eq-sunburst, .eq-btn--gold { animation: none; }
+  .eq-btn--gold::after { display: none; }
+}
+
+/* ---------------------------------------------------------------- plan value & renewal (Monetization value design) */
+.eq-expiry-banner { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 12px; }
+.eq-expiry-banner.is-warning { background: var(--eq-expiry-banner-warning-bg); color: var(--eq-expiry-banner-warning-text); }
+.eq-expiry-banner.is-danger { background: var(--eq-expiry-banner-danger-bg); color: var(--eq-expiry-banner-danger-text); }
+.eq-expiry-banner__icon { display: inline-flex; padding: 3px; border-radius: 50%; background: color-mix(in srgb, currentColor 12%, transparent); }
+.eq-expiry-banner__cta { color: inherit; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; flex-shrink: 0; }
+
+.eq-expiry-chip { display: inline-flex; align-items: center; height: 30px; padding: 0 8px; border-radius: 6px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; white-space: nowrap; }
+.eq-expiry-chip.is-active { background: var(--eq-expiry-chip-active-bg); color: var(--eq-text-gold); }
+.eq-expiry-chip.is-warning { background: var(--eq-expiry-chip-warning-bg); color: var(--eq-expiry-chip-warning-text); }
+.eq-expiry-chip.is-danger { background: var(--eq-expiry-chip-danger-bg); color: var(--eq-expiry-chip-danger-text); }
+
+.eq-value-card { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; padding: 18px 0 14px; border-radius: 20px; background: var(--eq-gradient-value-card); border: 1px solid var(--eq-value-card-stroke); }
+.eq-value-card::before { content: ''; position: absolute; inset: 0 0 auto; height: 260px; pointer-events: none;
+  background-image: repeating-radial-gradient(circle at 50% 70px, transparent 0 34px, var(--eq-value-card-ring) 35px 36px, transparent 37px 54px);
+  -webkit-mask-image: linear-gradient(#000 30%, transparent); mask-image: linear-gradient(#000 30%, transparent); }
+.eq-value-card > * { position: relative; }
+.eq-value-card__title { padding: 0 16px; }
+.eq-value-card__stat { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 4px 16px; }
+.eq-value-card__count { font-size: 48px; line-height: 52px; font-weight: 700; letter-spacing: -0.04em; color: var(--eq-text-primary); }
+.eq-value-card__perks { list-style: none; margin: 0 16px; padding: 0; border-radius: 14px; background: var(--eq-value-card-perks-bg); border: 1px solid var(--eq-value-card-stroke); }
+.eq-value-card__perks li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; color: var(--eq-text-primary); }
+.eq-value-card__perks li + li { border-top: 1px solid var(--eq-value-card-stroke); }
+.eq-value-card__expiry { display: flex; align-items: center; gap: 8px; padding: 6px 0 0; }
+.eq-value-card__expiry .eq-divider-label__rule { min-width: 12px; }
+.eq-value-card__plan { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 0 16px; }
+
+.eq-value-sheet { position: relative; background: var(--eq-sheet-bg); border-radius: 24px 24px 0 0; box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12); }
+.eq-value-sheet.is-inline { border-radius: 24px; margin-top: 64px; }
+.eq-status-sheet-layer .eq-value-sheet { animation: eq-sheet-up var(--eq-duration-slow) var(--eq-easing-standard) both; }
+.eq-value-sheet__close { position: absolute; left: 50%; top: -60px; transform: translateX(-50%); background: var(--eq-bg-surface) !important; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12); }
+.eq-value-sheet.is-card .eq-value-sheet__body { padding: 12px 12px 0; }
+.eq-value-sheet.is-flush .eq-value-sheet__body .eq-value-card { border: 0; border-radius: 24px 24px 0 0; }
+.eq-value-sheet.is-flush.is-inline .eq-value-sheet__body .eq-value-card { border-radius: 24px 24px 0 0; }
+.eq-value-sheet__footer { padding: 16px; }
+.eq-value-sheet.is-flush .eq-value-sheet__footer { background: var(--eq-bg-surface); border-top: 1px solid var(--eq-stroke-subtle); border-radius: 0 0 24px 24px; }
+.eq-status-sheet-layer .eq-value-sheet.is-flush .eq-value-sheet__footer { border-radius: 0; }
+
+.eq-feature-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.eq-feature-list li { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; background: var(--eq-bg-surface); border: 1px solid var(--eq-stroke-subtle); color: var(--eq-text-primary); }
+
+.eq-subscription-proof { display: flex; flex-direction: column; gap: 16px; padding: 24px 16px 20px; border-radius: 0 0 28px 28px; background: linear-gradient(180deg, var(--eq-bg-surface), var(--eq-paywall-card-bg) 30%, var(--eq-paywall-card-bg)); }
+
+/* Plan page value card: gold circuit lines across the top, white below. */
+.eq-value-card.is-circuit { background: linear-gradient(180deg, var(--eq-paywall-card-bg), var(--eq-bg-surface) 60%); }
+.eq-value-card.is-circuit::before { display: none; }
+.eq-value-card__circuit { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%; height: auto; max-width: none; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 34% 70% at 50% 30%, transparent 55%, #000 100%), linear-gradient(#000 35%, transparent 85%); -webkit-mask-composite: source-in;
+  mask-image: radial-gradient(ellipse 34% 70% at 50% 30%, transparent 55%, #000 100%), linear-gradient(#000 35%, transparent 85%); mask-composite: intersect; }
+[data-theme='dark'] .eq-value-card__circuit { opacity: 0.45; }
+
+/* Free plan quota card. */
+.eq-quota__head { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 4px 16px 0; }
+.eq-quota__bar { width: 100%; height: 10px; border-radius: 999px; background: var(--eq-paywall-divider); overflow: hidden; }
+.eq-quota__bar > span { display: block; height: 100%; border-radius: inherit; background: var(--eq-gradient-cta-gold); }
+
+/* Premium glow (supplied art) behind the rings cards in light; dark keeps the coded black-gold gradient + rings. */
+.eq-value-card__glow { position: absolute; top: 0; left: 0; width: 100%; height: auto; pointer-events: none; }
+.eq-value-card.is-rings:has(.eq-value-card__glow) { background: var(--eq-bg-surface); }
+.eq-value-card.is-rings:has(.eq-value-card__glow)::before { display: none; }
+[data-theme='dark'] .eq-value-card__glow { display: none; }
+[data-theme='dark'] .eq-value-card.is-rings:has(.eq-value-card__glow) { background: var(--eq-gradient-value-card); }
+[data-theme='dark'] .eq-value-card.is-rings:has(.eq-value-card__glow)::before { display: block; }

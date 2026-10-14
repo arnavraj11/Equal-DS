@@ -1,0 +1,35 @@
+{
+  "name": "@equal/ds",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Equal AI design system: tokens, React components, Compose module and the documentation site.",
+  "scripts": {
+    "tokens": "node scripts/build-tokens.mjs",
+    "typecheck": "tsc --noEmit",
+    "icons": "node scripts/build-icons.mjs",
+    "site": "npm run tokens && npm run snippets && npm run llms && vite --config site/vite.config.ts",
+    "site:build": "npm run tokens && npm run snippets && npm run llms && vite build --config site/vite.config.ts",
+    "site:preview": "vite preview --config site/vite.config.ts --outDir site-dist",
+    "snippets": "node scripts/build-snippets.mjs",
+    "assets": "python3 scripts/build-assets.py",
+    "llms": "node scripts/build-llms.mjs",
+    "logo": "node scripts/build-logo.mjs",
+    "deploy": "sh scripts/deploy.sh"
+  },
+  "dependencies": {
+    "@fontsource/dm-sans": "^5.1.0",
+    "lottie-web": "^5.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@material-symbols/svg-400": "^0.47.5",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^5.0.0",
+    "simple-icons": "^16.33.0",
+    "typescript": "^5.6.3",
+    "vite": "^7.0.0"
+  }
+}

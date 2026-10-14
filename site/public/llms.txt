@@ -1,0 +1,97 @@
+# Equal AI Design System
+
+> The design system for the Equal AI app (an AI call assistant): tokens, components, screens and flows for web (React) and Android (Jetpack Compose). DM Sans, Material Symbols, a 390 × 800 dp Android frame, light and dark.
+
+Read llms-full.txt before designing or building: rules, the recipe for a new flow, and every component with its props and React + Compose code.
+
+## Docs
+
+- [Full catalog](llms-full.txt): rules, components, flows, tokens, assets, icons
+- [CLAUDE.md](CLAUDE.md): the rules and the new-flow recipe Claude follows in the repo
+- [Claude skill (zip)](equal-ds-flow-skill.zip): upload in claude.ai → Settings → Capabilities → Skills
+
+## Components
+
+- [Action chips](#/components/action-chips): Emoji-led glass chips for the next step after a call: small chips in the chat list, large chips inside a conversation or the AI panel.
+- [Button](#/components/button): Filled, text and icon buttons: use a filled Button for the one commit action on a surface, a TextButton for revise or secondary actions, and an IconButton for icon-only controls like back, close and call.
+- [Assistant sheet (Global MYA)](#/components/assistant-sheet): The sheet the green orb opens on any screen: greeting, quick-action tiles, suggestion chips and a text or voice input. A request turns it into a short task conversation (voice note → Thinking… → result card → Edit / Confirm).
+- [Chat actions](#/components/chat-actions): What the AI layer uses to carry out a task in a chat and to fail well: the assistant’s turn, Hold to speak, the edit-in-place bubble, the new contact form (two parity options), the permission dialog and the offline sheet and screen.
+- [Action card](#/components/action-card): A card for something the assistant did or proposes (a WhatsApp reply, an appointment, a saved rule), with stacked actions underneath.
+- [Assistant toggle](#/components/assistant-toggle): The card at the top of Chats and the You tab that turns the AI assistant on or off, with the mascot dimming when it is off.
+- [Feedback card](#/components/feedback-card): The post-call card that asks the user to rate the call from one to five stars and share feedback.
+- [Meet Your Assistant card](#/components/meet-assistant-card): Introduces the voice assistant with its persona avatar and a “Call me” pill. Compact on Chats once the assistant is back; banner as a standalone promo.
+- [System status card](#/components/system-status-card): Takes the assistant toggle’s place on Chats while Equal AI is down: a SYSTEM STATUS pill, the sleeping robot, and a “Notify me when ready” pill that turns into a confirmation.
+- [What's New card](#/components/whats-new-card): A dismissible announcement card with the NEW FEATURE badge, a heading, body copy and one CTA. Built in three layers: a flat fill, a blurred circle in the bottom-right corner, and the illustration on top of the circle.
+- [AI panel](#/components/ai-panel): The assistant's bottom panel inside a conversation: a suggestion from the orb, large action chips and a composer; AiSuggestion is the avatar-plus-prompt line on its own.
+- [Call status](#/components/call-status): Centred thread markers: the day divider, call start/end events, and a notice when the thread switches to the assistant.
+- [Call summary](#/components/call-summary): The post-call card in a thread: a recording player with a coded waveform and speed pill, the assistant's summary, and an optional share footer or "Instruction Applied" tag.
+- [Chat bubble](#/components/chat-bubble): Message bubbles for a call thread: outgoing (Equal AI or you on the call), incoming (the caller) and assistant (Equal AI talking to you), stacked with MessageList.
+- [Chat list item](#/components/chat-list-item): A row in the Chats list with avatar, name, date, preview, unread count and the small action chips; states come from `unread` and `selected`.
+- [Chat wallpaper](#/components/chat-wallpaper): The doodle pattern behind chat threads and the instruction setup chat, tinted by token so one tile serves light and dark.
+- [Missed call card](#/components/missed-call): The thread card for a call the assistant couldn’t pick up. One component, three cases: we know why the caller usually calls, we know only their name, or we know nothing. Every case ends in Call back.
+- [Avatars](#/components/avatars): Every face in the app: caller category art or initials for contacts, the Equal orb for the assistant, the ringed 3D profile avatar for the user, and the robot mascot.
+- [Badges](#/components/badges): Small uppercase markers: NEW on settings rows, unread counts, the NEW FEATURE pill on announcements, and the gold UNLIMITED plan marker.
+- [Lottie animation](#/components/lottie): Plays illustrative animations shipped as Lottie JSON: mascot moments, celebrations, typing. The same file plays on web and Android.
+- [Address](#/components/address): Saved address cards with an Edit / Delete overflow, and the add/edit form (label chips, address lines, city, pincode, guiding direction, Save).
+- [Call Handling](#/components/call-handling): Pieces of the Call Handling setup and the known-call notification: radio choice cards, contact pickers with an A–Z index, the setup takeover, permission sheets, the done wash, the Android ongoing-call notification and the ongoing-call strip.
+- [Gender selector](#/components/gender-selector): The two-card Male / Female picker in Personal Details; the choice sets the profile avatar across the app.
+- [Instruction cards](#/components/instruction-cards): The pieces of the Instructions flow: recommended and preset cards on the hub, preset and active instruction cards with When / Do rows, and the preview shown in the setup chat.
+- [Checkbox](#/components/checkbox): A coded checkbox with an optional label, used for multi-select such as "Select All" in chat-list selection mode.
+- [Composer](#/components/composer): The message input bar with a send button that stays disabled until there is text, used at the bottom of a chat and in the AI panel.
+- [Search](#/components/search): The search screen’s pieces: the outlined search bar with back inside, section labels with Clear all, recent searches as avatar tiles, message hits with the match in bold, loading dots and the three illustration states.
+- [Search field](#/components/search-field): A pill search input with a leading search icon and a clear button, used to filter chats.
+- [Segmented chips](#/components/segmented-chips): A single-select row of pill chips for a short, fixed set of options, like the Home / Work / Other address label.
+- [Switch](#/components/switch): A controlled on/off toggle (40 × 24 track) for settings that take effect immediately, such as the assistant or promotional-call muting.
+- [Text field](#/components/text-field): A borderless white form field with an uppercase overline label, bodyLarge value, helper and error text, used in the Personal Details and Address forms.
+- [Call history](#/components/call-history): The Contact Info call-history card (radius 16; outlined in dark) and its rows: direction icon, call type, meta line and time.
+- [Empty state](#/components/empty-state): A centred illustration, title, body and optional action for empty lists and no-results, plus IllustrationHeader for the art at the top of settings detail screens.
+- [Settings row](#/components/settings-row): The dense settings row (icon, subheading label, caption description, chevron or switch), grouped into rounded cards with RowGroup.
+- [Cancellation](#/components/cancel-sheet): Three steps to cancel: tell us why (Proceed stays disabled until there is text), confirm, and the request submitted with access kept until the end date.
+- [Coupon ticket](#/components/coupon-ticket): A notched ticket with the coupon code, what it saves, APPLY / APPLIED and the big discount line.
+- [Discount badge & price drop](#/components/discount-badge): The green 25% OFF seal with its label, and the price drop it rides on: APPLY strikes the old price, the new price lands beside the list price with Saved ₹100, then the badge pops.
+- [FAQ](#/components/faq): The FREQUENTLY ASKED QUESTIONS accordion on the paywall and the subscription page, and the hairline section label it sits under.
+- [Feature list](#/components/feature-list): What You Get on the plan page: one card per Unlimited feature with its 3D gold icon (24/7 Unlimited Call Screening, Unlimited Recordings, Unlimited Summaries).
+- [Help Center sheet](#/components/help-center-sheet): Opened from Support on the paywall (or Contact Support after a pending payment): call or mail the team.
+- [Locked content](#/components/locked-content): How free users see what Unlimited unlocks: blurred previews with the crown-lock badge, the Unlock All Details card, and the Unlock Audio pill. Each is a paywall touchpoint.
+- [Payment status](#/components/payment-status): The result sheets after the user pays: Waiting for Confirmation, Payment Confirmed, Pending, Failed and Congratulations. All share the ring StatusCard.
+- [Paywall](#/components/paywall): The Equal Unlimited paywall: gold hero with the 3D crown, the price, a preview of what is locked (it changes with the touchpoint), and the sticky gold CTA.
+- [Paywall experiments](#/components/monetization-experiments): The pieces the Android team A/B tests around the paywall: full-screen payment results, the processing strip, the sheet paywall with its coupon row, Help Center and exit offer, the offer strip, home notice and usage cards, Equal AI’s own notice, crown-locked actions and recordings.
+- [Plan banner](#/components/plan-banner): The amber "Reactivate your current Plan…" strip for lapsed plans, under the plan card in Settings or at the top of a chat; plus the plan card link label (Manage plan / Restore Plan / Reactivate plan).
+- [Plan expiry banner](#/components/plan-expiry-banner): The strip under the home header as a plan runs out: amber while days remain, red on the last day and after it ends, always with Renew Now.
+- [Social proof](#/components/social-proof): The subscription page proof block: a big gold stat, the rating pill and a testimonial carousel.
+- [Value card & sheet](#/components/value-card): What Unlimited saved you: calls handled, the perks, the expiry chip and the current plan. Inside the sheet that rises after a call near the end of a plan, and on the plan page (circuit pattern, no perks). For free users the QuotaCard counts the week’s calls instead.
+- [App bar](#/components/app-bar): The standard screen header with back, a subheading title and trailing actions, plus the uppercase section header that labels groups of rows.
+- [Bottom nav](#/components/bottom-nav): The floating two-tab pill (Chats, You) with an unread count, beside the Equal orb FAB that opens the assistant.
+- [Chat header](#/components/chat-header): Headers for the chat surfaces: the in-conversation header (with the Takeover pill on a live call), the chat-list selection header, and the home header with the assistant toggle.
+- [Status bar](#/components/status-bar): The Material 3 Android status bar (52dp: Roboto time; wifi, triangle signal and an upright battery) for mocks, flows and screen demos.
+- [Top bar](#/components/top-bar): The Chats home bar: the vector Equal AI logo with the plan marker, plus the logo and mark on their own.
+- [Bottom sheet](#/components/bottom-sheet): Sheets that rise over the current screen: the standard sheet with a floating close or title row, the centred confirm content for destructive actions, and the full-height sheet for the instruction setup chat.
+- [Context menu](#/components/context-menu): The long-press menu of icon + label items, and OverflowMenu, the ⋮ button that opens one anchored to a card.
+- [Dialog](#/components/dialog): A centred decision dialog with a text cancel and one filled commit, plus the inverse-surface Snackbar that confirms an action afterwards.
+- [System notification](#/components/system-notification): The Android heads-up notification Equal AI posts, drawn over the status bar in mocks and flows (e.g. “Equal AI Assistant is back on”).
+- [AI summary card](#/components/ai-summary-card): The "Your AI Summary" card, prose the assistant wrote about the user, with empty, loading and ready states.
+- [Contact info header](#/components/contact-info-header): The top of the Contact Info screen: a 96dp avatar, name, phone and a row of action tiles (Call, Mute, Save, Share).
+- [Invite card](#/components/invite-card): The mint "Invite a Friend" pill at the bottom of the You tab, with the high-five art rising above it and a share button.
+- [Plan card](#/components/plan-card): The dark card showing the user's current plan (Equal AI UNLIMITED, ₹149/Monthly), with a Manage plan action and an expired state.
+- [Profile hero](#/components/profile-hero): The gold header at the top of the You tab (avatar, name, plan marker, edit, phone) that hosts the plan card, plus the compact ProfileHeader.
+
+## Flows
+
+- [Monetization](#/flows/monetization): Equal Unlimited: the free-plan touchpoints that open the paywall, the paywall itself, payment results, managing and cancelling the plan, and lapsed plans. The Android team experiments here, so every screen takes the experiment knobs (price, coupon, copy, entry touchpoint) as props.
+- [Temporarily unavailable](#/flows/system-status): What Chats shows while Equal AI is down, and how it tells you it’s back. Switch to Try it and tap “Notify me when ready” to run the whole flow.
+- [Profile flow](#/flows/profile): Personal Details, Silent Mode and WhatsApp Updates: the nested screens behind the You tab.
+- [Addresses flow](#/flows/addresses): Empty state, the saved list with an overflow menu, the Edit Address sheet and the delete confirm.
+- [Instructions flow](#/flows/instructions): The hub, presets, the “Setting up instruction” chat and Active Instructions. Switch to Try it and apply an instruction end to end.
+- [Plan value & renewal](#/flows/plan-renewal): Before a plan ends, show what it did for the user, then make renewing one tap. Home carries the expiry strip, a call near the end brings up the What Unlimited saved you sheet, and Manage plan leads to the renewal page and the paywall.
+- [Global MYA](#/flows/global-mya): Tap the green orb anywhere and your assistant answers in a sheet: a greeting, quick actions and suggestions, then a request typed or spoken. The request turns into a short task conversation that ends with the result to confirm.
+- [Monetization touchpoints](#/flows/monetization-touchpoints): Where a free user meets Equal Unlimited. Each touchpoint is an experiment option the Android team A/B tests, built as props on the same Home, Chat and Paywall screens.
+- [Sheet paywall & payment](#/flows/paywall-sheet): The experiment that opens the paywall as a sheet over the screen the user was on, offers EQUAL25 when they try to leave, and shows full-screen payment results. If the user closes a pending payment, every surface says it is processing and the paywall locks.
+- [Call Handling](#/flows/call-handling): You → Your assistant → Call Handling: which calls the assistant answers and who always rings you. New users are invited into it from home: two questions, one minute. The wording is an experiment, so the question screen takes a copy prop.
+- [Known-call notifications](#/flows/known-calls): When the assistant answers someone you know, Android shows an ongoing notification that tells you who it is and what they want, with quick replies, and hands the call to you when it needs you. Opening it shows the live chat.
+- [Search](#/flows/search): Search from home: names, numbers, categories and keywords across calls. Results arrive in two passes, chats first and messages after, so something useful shows while the slower search finishes.
+- [Call Back](#/flows/call-back): The AI layer calls someone back for you: it suggests what to ask, hands off to the phone’s dialer, and leaves an Outgoing call card in the chat.
+- [Mute](#/flows/mute): Muting a caller from the chat: the assistant double-checks, because muting means missing their calls even when they matter.
+- [Reply on WhatsApp](#/flows/reply-whatsapp): The assistant drafts a WhatsApp reply from the call. The user sends it as is or edits it in place, WhatsApp opens with the message entered, and the chat keeps a record.
+- [Save Contact](#/flows/save-contact): Saving an unknown caller as a contact from the chat, including editing the details, the contact form, and every path through the contacts permission.
+- [Error states](#/flows/error-states): How the AI layer fails: say what happened in one line and offer the one action that fixes it.
+- [Contact info](#/flows/contact-info): The caller’s page: category avatar, name and number, four action tiles and the call history.

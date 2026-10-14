@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+
+# build output (rebuilt by npm run site:build / npm run deploy)
+site-dist/
+deploy/
+dist/
+
+# Android / Gradle (see also compose/.gitignore)
+compose/local.properties
+compose/.gradle/
+compose/.kotlin/
+compose/**/build/
+
+# Vercel
+.vercel/
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/

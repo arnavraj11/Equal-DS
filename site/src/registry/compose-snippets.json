@@ -1,0 +1,533 @@
+{
+  "action-card": {
+    "WhatsApp reply": "// The coded WhatsApp logo is the default when no category or icon is set\nActionCard(\n    title = \"WhatsApp · Amit Nanda\",\n    quote = \"“Count me in for Sunday 8 PM 👍”\",\n    timestamp = \"03:21\",\n    actions = listOf(\n        ActionCardAction(\"Send\", emoji = \"📤\", onClick = {}),\n        ActionCardAction(\"Edit reply\", emoji = \"✏️\", onClick = {}),\n    ),\n)",
+    "Appointment: Confirm + Edit": "ActionCard(\n    category = EqualCategory.Others,\n    title = \"Dr. Mehta's Clinic Appointment\",\n    lines = listOf(\n        ActionCardLine(\"Tomorrow, 9:00 AM\"),\n        ActionCardLine(\"Bring previous medical reports\", ActionCardTone.Tertiary),\n    ),\n    timestamp = \"03:21\",\n    actions = listOf(\n        ActionCardAction(\"Confirm\", emoji = \"👍\", onClick = {}),\n        ActionCardAction(\"Edit\", emoji = \"✏️\", onClick = {}),\n    ),\n)",
+    "Instruction saved": "ActionCard(\n    icon = EqualIcons.Instructions,\n    title = \"Instruction saved\",\n    lines = instructionLines(\"Delivery agents call\", \"Ask them to leave parcels with security\"),\n    timestamp = \"03:21\",\n    actions = listOf(ActionCardAction(\"Edit rule\", emoji = \"✏️\", onClick = {})),\n)",
+    "Instruction (body only)": "ActionCardBody(\n    icon = EqualIcons.Instructions,\n    title = \"Instructions\",\n    lines = instructionLines(\"Bank calls come\", \"Tell callers I’ll call back after 6 PM\"),\n    timestamp = \"03:21\",\n)"
+  },
+  "action-chips": {
+    "Small chip states": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n        SmallActionChip(label = \"Call Back\", emoji = \"📞\", onClick = {})\n        SmallActionChip(label = \"Update Address\", emoji = \"✏️\", onClick = {})\n    }\n    SmallActionChip(label = \"Call Back\", emoji = \"📞\", onClick = {}, style = SmallActionChipStyle.Read)\n    SmallActionChip(label = \"Call Back\", emoji = \"📞\", onClick = {}, style = SmallActionChipStyle.Outlined)\n    // Compose: no chevron toggle; the trailing chevron is always shown.\n    SmallActionChip(label = \"Add to Calendar\", emoji = \"🗓️\", onClick = {}, style = SmallActionChipStyle.Outlined)\n}",
+    "Large chips": "// Compose: no ChipRow; a Row with spacedBy(8.dp) does the same job.\nRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n    LargeActionChip(label = \"Takeover\", emoji = \"📞\", onClick = {})\n    LargeActionChip(label = \"Ask to reschedule\", emoji = \"🗓️\", onClick = {})\n}\nRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n    LargeActionChip(label = \"Edit\", emoji = \"✍️\", onClick = {}, state = LargeActionChipState.Read)\n    LargeActionChip(label = \"Confirm\", emoji = \"👍\", onClick = {})\n}",
+    "In a chat row": "// Compose: no ChipRow; a horizontally scrolling Row (gap 12) clips at the right edge.\nRow(\n    modifier = Modifier.horizontalScroll(rememberScrollState()),\n    horizontalArrangement = Arrangement.spacedBy(12.dp),\n) {\n    SmallActionChip(label = \"Call Back\", emoji = \"📞\", onClick = {})\n    SmallActionChip(label = \"Update Address\", emoji = \"✏️\", onClick = {})\n    SmallActionChip(label = \"Add to Calendar\", emoji = \"🗓️\", onClick = {})\n}"
+  },
+  "address": {
+    "Saved addresses": "var addresses by remember { mutableStateOf(SampleAddresses) }\nColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    addresses.forEach { a ->\n        AddressCard(\n            label = a.label,\n            address = formatAddress(a),\n            onEdit = {},\n            onDelete = { addresses = addresses - a },\n        )\n    }\n}",
+    "Long address": "AddressCard(\n    label = \"Work\",\n    address = \"Flat 4B, Block C, Skyline Towers, Phase 2, HITECH city, MG Road, Opposite City Center Mall, Banjara Hills, Hyderabad- 500034\",\n    onEdit = {},\n)",
+    "Edit address form": "AddressForm(\n    // Compose: SavedAddress needs an id (web takes a Partial)\n    initial = SavedAddress(\n        id = \"a1\",\n        label = \"Home\",\n        line1 = \"House no. 4, Tony Street\",\n        line2 = \"Financial District\",\n        city = \"Hyderabad\",\n        pincode = \"500032\",\n    ),\n    onSave = {},\n)"
+  },
+  "ai-panel": {
+    "After a call": "var draft by remember { mutableStateOf(\"\") }\n\nAiChatPanel(\n    prompt = \"Want me to send Amit a quick reply on WhatsApp?\",\n    actions = listOf(\n        ActionChipData(\"Reply on WhatsApp\", \"💬\"),\n        ActionChipData(\"Add to Calendar\", \"🗓️\"),\n    ),\n    onActionClick = {},\n    composerValue = draft,\n    onComposerValueChange = { draft = it },\n    onSend = {},\n)",
+    "During a live call, no composer": "var draft by remember { mutableStateOf(\"\") }\n\n// Compose: AiChatPanel always shows the composer; there is no composer = false.\nAiChatPanel(\n    prompt = \"Arnav is at the gate with a parcel. Want to take over?\",\n    actions = listOf(\n        ActionChipData(\"Takeover\", \"📞\"),\n        ActionChipData(\"Ask to reschedule\", \"🗓️\"),\n    ),\n    onActionClick = {},\n    composerValue = draft,\n    onComposerValueChange = { draft = it },\n    onSend = {},\n)",
+    "AI suggestion": "Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    AiSuggestion(\"Want me to send Amit a quick reply on WhatsApp?\")\n    // Compose: no `tone`; AiSuggestion is always text/primary.\n    AiSuggestion(\"I can also add Sunday dinner to your calendar.\")\n}"
+  },
+  "ai-summary-card": {
+    "Ready": "// Compose: status isn't inferred from summary; pass Ready explicitly\nAiSummaryCard(\n    status = AiSummaryStatus.Ready,\n    summary = \"Your family calls you a lot. They always say it's urgent. They almost never say why.\",\n)",
+    "Empty": "AiSummaryCard()",
+    "Loading": "AiSummaryCard(status = AiSummaryStatus.Loading, lastUpdated = \"8:06 AM\")"
+  },
+  "app-bar": {
+    "Centred (flows)": "EqualAppBar(title = \"Personal Details\", onBackClick = {})",
+    "Start-aligned, elevated, with trailing": "EqualAppBar(\n    title = \"Active Instructions\",\n    onBackClick = {},\n    align = AppBarAlign.Start,\n    background = EqualTheme.colors.bgSurface,\n    elevated = true,\n) {\n    EqualTextButton(text = \"Add\", onClick = {}, leadingIcon = EqualIcons.Add)\n}",
+    "Section headers": "// Pass normal text; SectionHeader uppercases it.\nSectionHeader(title = \"Your assistant\")\n// Compose: no `qualifier` slot; it is appended to the title (and uppercased with it).\nSectionHeader(title = \"Guiding direction (Optional)\")\nSectionHeader(title = \"Recommended for you\", actionLabel = \"Clear all\", onActionClick = {})"
+  },
+  "assistant-sheet": {
+    "Greeting & quick actions": "EqualTheme {\n    AssistantSheetShell(\n        onScrim = { /* close */ },\n        footer = { AssistantInput(mode = AssistantInputMode.Text, onMic = { /* to voice */ }, onSubmit = { /* send */ }) },\n    ) {\n        AssistantGreeting(name = \"Keshav\")\n        AssistantActions(\n            items = listOf(\n                AssistantAction(\"Talk to Equal\"), // null icon: the Equal mark\n                AssistantAction(\"Talk to Equal\", EqualIcons.AutoFix),\n                AssistantAction(\"Make a call\", EqualIcons.CallFilled),\n            ),\n        )\n        AssistantChips {\n            LargeActionChip(label = \"Reply Amit on WhatsApp\", emoji = \"\\uD83D\\uDDD3\\uFE0F\", onClick = {})\n            LargeActionChip(label = \"Set reminder\", emoji = \"\\uD83D\\uDD14\", onClick = {})\n        }\n    }\n}",
+    "Input: text and voice": "EqualTheme {\n    var mode by remember { mutableStateOf(AssistantInputMode.Text) }\n    var text by remember { mutableStateOf(\"\") }\n    AssistantInput(\n        mode = mode,\n        value = text,\n        onValueChange = { text = it },\n        onMic = { mode = AssistantInputMode.Voice },\n        onKeyboard = { mode = AssistantInputMode.Text },\n        onSubmit = { /* send it */ },\n        onVoiceNote = { /* record */ },\n        onVoiceHold = { /* hold to record */ },\n        modifier = Modifier.imePadding(), // lift above the system keyboard\n    )\n}",
+    "Recorder states": "EqualTheme {\n    Column(Modifier.background(EqualTheme.colors.sheetBg).padding(16.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {\n        VoiceRecorder(state = RecorderState.Idle, onDelete = {}, onSend = {})\n        VoiceRecorder(state = RecorderState.Recording, seconds = 4, onDelete = {}, onSend = {})\n        VoiceRecorder(state = RecorderState.Hold) // press and hold: release to send, slide left to cancel\n        VoiceRecorder(state = RecorderState.Cancel) // slid left: release to cancel\n    }\n}",
+    "Task conversation": "EqualTheme {\n    Column(Modifier.background(EqualTheme.colors.chatWallpaperBg)) {\n        AssistantTaskHeader(title = \"Setting up a reminder for appointment at Dr. Mehta\\u2019s\", onClose = { /* close */ })\n        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {\n            AssistantThinking()\n            AssistantReplies(onEdit = { /* edit */ }, onConfirm = { /* confirm */ })\n        }\n    }\n}",
+    "Reply card": "EqualTheme {\n    Column(Modifier.background(EqualTheme.colors.chatWallpaperBg).padding(16.dp)) {\n        AssistantReplyCard(\n            text = \"Sure! Here\\u2019s a draft for Amit:\\n\\nHi Amit! Count me in for Sunday 8 PM. See you there \\uD83D\\uDC4D\",\n            time = \"03:21\",\n            actions = listOf(\n                ReplyAction(label = \"Edit\", emoji = \"\\u270F\\uFE0F\", onClick = { /* edit */ }),\n                ReplyAction(label = \"Send\", emoji = \"\\uD83D\\uDCE4\", onClick = { /* send */ }),\n            ),\n        )\n    }\n}",
+    "Chat task sheet": "EqualTheme {\n    // From a chat's AI layer (Reply on WhatsApp, or a sent message): stops below the chat header\n    ChatTaskSheet(\n        contact = \"Amit\",\n        request = \"Reply on whatsapp\",\n        onClose = { /* close */ },\n        onSend = { /* open WhatsApp */ },\n    )\n}",
+    "Carousel dots": "EqualTheme {\n    CarouselDots(count = 3, active = 0)\n}"
+  },
+  "assistant-toggle": {
+    "Interactive": "var on by remember { mutableStateOf(true) }\nAssistantToggleCard(checked = on, onCheckedChange = { on = it })",
+    "On and off": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    AssistantToggleCard(checked = true, onCheckedChange = {})\n    AssistantToggleCard(checked = false, onCheckedChange = {})\n}"
+  },
+  "avatars": {
+    "Caller categories": "Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {\n    CategoryAvatar(category = EqualCategory.NA, size = 48.dp)\n    CategoryAvatar(category = EqualCategory.Delivery, size = 48.dp)\n    CategoryAvatar(category = EqualCategory.RealEstate, size = 48.dp)\n}",
+    "Contact avatar": "Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {\n    ContactAvatar(size = 48.dp)\n    ContactAvatar(size = 48.dp, category = EqualCategory.Others)\n    ContactAvatar(size = 48.dp, initials = \"AN\")\n    ContactAvatar(size = 48.dp, initials = \"AN\", selected = true)\n    ContactAvatar(size = 36.dp, category = EqualCategory.Career)\n}",
+    "Saved-contact colours": "Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {\n    // The tone is picked from the initials by default; pass tone to choose.\n    listOf(\"AN\", \"AR\", \"KS\", \"PR\", \"VJ\", \"MS\").zip(ContactTone.entries).forEach { (initials, tone) ->\n        InitialsAvatar(initials = initials, size = 48.dp, tone = tone)\n    }\n}",
+    "Assistant, user and mascot": "Row(horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.Bottom) {\n    AiAvatar(size = AiAvatarSize.Small)\n    AiAvatar(size = AiAvatarSize.Medium)\n    AiAvatar(size = AiAvatarSize.Large)\n    EqualLogoOrb(size = 58.dp)\n    ProfileAvatar(variant = ProfileAvatarVariant.Male, width = 70.dp)\n    ProfileAvatar(variant = ProfileAvatarVariant.Female, width = 70.dp)\n    EqualMascot(size = 40.dp)\n    EqualMascot(size = 40.dp, dimmed = true)\n}",
+    "Profile avatar: free vs paid": "Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {\n    ProfileAvatar(variant = ProfileAvatarVariant.Male, width = 70.dp, tier = PlanTier.Free)\n    ProfileAvatar(variant = ProfileAvatarVariant.Male, width = 70.dp, tier = PlanTier.Paid)\n}"
+  },
+  "badges": {
+    "All badges": "Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {\n    NewBadge()\n    // Compose: no tone = \"soft\"; NewBadge has the solid fill only.\n    CountBadge(count = 5)\n    CountBadge(count = 12)\n    CountBadge(count = 140) // renders 99+\n    FeatureBadge()\n    PlanBadge()\n}",
+    "In context": "Column {\n    TopBar() // PlanBadge\n    RowGroup(inset = 0.dp) {\n        SettingsRow(\n            label = \"Instructions\",\n            description = \"Tell assistant how you'd like it to help\",\n            leadingIcon = EqualIcons.Instructions,\n            showNewBadge = true, // NewBadge\n        )\n    }\n    ChatListItem(\n        name = \"Arnav Raj\",\n        preview = \"You have a visitor\",\n        date = \"Yesterday\",\n        state = ChatListItemState.Unread,\n        unreadCount = 5, // CountBadge\n    )\n}"
+  },
+  "bottom-nav": {
+    "Interactive": "var tab by remember { mutableStateOf(EqualTab.Chats) }\n\nBottomNavBar(\n    selectedTab = tab,\n    onTabSelected = { tab = it },\n    onFabClick = {},\n    chatsBadgeCount = 7,\n)",
+    "You active, female avatar, no FAB": "// Compose: BottomNavBar always draws the FAB; there is no showFab = false.\nBottomNavBar(\n    selectedTab = EqualTab.You,\n    onTabSelected = {},\n    onFabClick = {},\n    avatar = ProfileAvatarVariant.Female,\n)",
+    "FAB on its own": "EqualFab(onClick = {})"
+  },
+  "bottom-sheet": {
+    "Delete confirm (inline)": "// Compose: no inline mode; the sheet always draws over its parent with the scrim\nEqualBottomSheet(visible = true, onDismissRequest = {}) {\n    ConfirmSheetContent(\n        title = \"Delete chat with\\nAmit Nanda\",\n        phone = \"(+91 9871746113)\",\n        body = \"All past conversations will be deleted. This action cannot be undone.\",\n        confirmLabel = \"Delete\",\n        destructive = true,\n        onConfirm = {},\n    )\n}",
+    "Titled sheet (inline)": "// Compose: no inline mode; the sheet always draws over its parent with the scrim\nEqualBottomSheet(visible = true, onDismissRequest = {}, title = \"Turn off WhatsApp updates?\") {\n    Column(horizontalAlignment = Alignment.CenterHorizontally) {\n        IllustrationHeader(asset = EqualAssets.IllustrationWhatsapp, size = 120.dp)\n        EqualText(\n            text = \"You'll stop getting call alerts and account updates on WhatsApp.\",\n            style = EqualTheme.type.body1,\n            color = EqualTheme.colors.textSecondary,\n            textAlign = TextAlign.Center,\n        )\n        EqualButton(text = \"Turn off updates\", onClick = {}, size = EqualButtonSize.Block, modifier = Modifier.padding(top = 16.dp))\n    }\n}",
+    "Overlay in a phone": "var open by remember { mutableStateOf(false) }\nBox(Modifier.fillMaxSize()) {\n    EqualButton(text = \"Delete chat\", onClick = { open = true }, variant = EqualButtonVariant.Danger, leadingIcon = EqualIcons.Delete)\n    EqualBottomSheet(visible = open, onDismissRequest = { open = false }) {\n        ConfirmSheetContent(\n            title = \"Delete chat with\\nAmit Nanda\",\n            phone = \"(+91 9871746113)\",\n            // Compose: body is required\n            body = \"All past conversations will be deleted. This action cannot be undone.\",\n            confirmLabel = \"Delete\",\n            destructive = true,\n            onConfirm = { open = false },\n        )\n    }\n}",
+    "Full sheet": "var open by remember { mutableStateOf(false) }\nFullSheet(\n    visible = open,\n    onDismissRequest = { open = false },\n    title = \"Setting up instruction\",\n    footer = {\n        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n            LargeActionChip(label = \"Edit\", emoji = \"✍️\", onClick = {}, state = LargeActionChipState.Read)\n            LargeActionChip(label = \"Confirm\", emoji = \"👍\", onClick = { open = false })\n        }\n    },\n) {\n    // Compose: no MessageList; stack bubbles in a Column\n    Column(Modifier.padding(horizontal = 12.dp, vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {\n        ChatBubble(message = \"Take a message & Callback request\", timestamp = \"03:21\", type = ChatBubbleType.Outgoing, sender = \"You\")\n        ChatBubble(message = \"Got it! Here's your instruction:\", timestamp = \"03:21\", type = ChatBubbleType.Assistant, sender = \"Equal AI\")\n    }\n}"
+  },
+  "button": {
+    "Variants": "EqualButton(text = \"Save\", onClick = {})\nEqualButton(text = \"Try Voices\", onClick = {}, variant = EqualButtonVariant.Secondary)\nEqualButton(text = \"Delete\", onClick = {}, variant = EqualButtonVariant.Danger, leadingIcon = EqualIcons.Delete)\nEqualButton(text = \"Save\", onClick = {}, enabled = false)",
+    "Sizes": "EqualButton(text = \"Apply\", onClick = {}, size = EqualButtonSize.Sm, leadingIcon = EqualIcons.Add)\nEqualButton(text = \"Save\", onClick = {}, size = EqualButtonSize.Md)\nEqualButton(text = \"Save\", onClick = {}, size = EqualButtonSize.Lg)\n// Block = lg metrics at full width\nEqualButton(text = \"Add New Instruction\", onClick = {}, size = EqualButtonSize.Block, leadingIcon = EqualIcons.Add)",
+    "Text and icon buttons": "Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {\n    EqualTextButton(text = \"Edit\", onClick = {})\n    EqualTextButton(text = \"Share\", onClick = {}, leadingIcon = EqualIcons.Share)\n    EqualTextButton(text = \"Share Feedback\", onClick = {}, trailingIcon = EqualIcons.ChevronRight)\n    EqualTextButton(text = \"Delete address\", onClick = {}, danger = true)\n}\nRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n    EqualIconButton(icon = EqualIcons.Back, contentDescription = \"Back\", onClick = {})\n    EqualIconButton(icon = EqualIcons.Check, contentDescription = \"Confirm\", onClick = {}, variant = EqualIconButtonVariant.Primary)\n}",
+    "Commit + revise": "Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n    EqualTextButton(text = \"Cancel\", onClick = {})\n    EqualButton(text = \"Turn off\", onClick = {})\n}"
+  },
+  "call-handling": {
+    "Choice cards": "var mode by remember { mutableStateOf(CallMode.All) }\nColumn(Modifier.selectableGroup(), verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    ChoiceCard(\n        icon = EqualIcons.Globe,\n        title = \"All calls, except a few\",\n        description = \"I answer everyone. You pick who I skip.\",\n        selected = mode == CallMode.All,\n        onSelect = { mode = CallMode.All },\n    )\n    ChoiceCard(\n        icon = EqualIcons.Call,\n        title = \"Only unknown numbers\",\n        description = \"I answer numbers that are not saved in your phone.\",\n        selected = mode == CallMode.Unknown,\n        onSelect = { mode = CallMode.Unknown },\n    )\n    InfoNote(\n        title = \"Contact access needed\",\n        body = \"Without it, the assistant can’t handle all calls.\",\n        link = \"Give contacts permission\",\n        onLink = { /* ask for READ_CONTACTS */ },\n    )\n}",
+    "Contact pickers": "var picked by remember { mutableStateOf(true) }\nColumn {\n    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n        ContactPick(initials = \"SU\", name = \"Mom\", onClick = { /* add */ })\n        ContactPick(initials = \"VC\", name = \"Vijay Cousin\", onClick = { /* remove */ }, mark = ContactPickMark.Remove)\n    }\n    Box(Modifier.fillMaxWidth()) {\n        ContactCheckRow(initials = \"AR\", name = \"Arnav Raj\", phone = \"+91 8986461540\", checked = picked, onCheckedChange = { picked = it })\n        AlphabetIndex(Modifier.align(Alignment.CenterEnd).padding(end = 2.dp), onPick = { /* jump to letter */ })\n    }\n}",
+    "Permission sheet": "// Overlay: fills the screen (scrim + sheet); pass inline = true to draw only the sheet\nPermissionSheet(\n    art = EqualAssets.PermissionContacts,\n    title = \"Allow contacts permission\",\n    body = \"I need your contact list to know who is calling.\",\n    cta = \"Allow\",\n    onAllow = { /* request READ_CONTACTS */ },\n    onClose = { /* hide the sheet */ },\n)",
+    "Call notification": "// Design reference + in-app preview. On device, build the same content into an ongoing\n// NotificationCompat (CATEGORY_CALL, custom RemoteViews); the system draws the shell.\nColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    CallNotification(name = \"Mom\", state = CallNotificationState.Answering)\n    CallNotification(\n        name = \"Mom\",\n        state = CallNotificationState.Expanded,\n        category = EqualCategory.HomeServices,\n        summary = SampleCallSummary,\n        replies = listOf(\"Takeover\", \"I’ll bring them all\", \"I’ll call back to get more\"),\n        onReply = { /* say it (it == \"Takeover\": pick up) */ },\n        onAnswer = { /* pick up */ },\n    )\n    CallNotification(name = \"Mom\", state = CallNotificationState.Connecting)\n}",
+    "Ongoing call bar": "OngoingCallBar(elapsed = \"02:34\")"
+  },
+  "call-history": {
+    "Directions": "SectionHeader(title = \"Call history\", size = SectionHeaderSize.Label, inset = 22.dp)\nCallHistoryList {\n    CallHistoryRow(CallDirection.Incoming, meta = \"Today • 30 Sec.\", time = \"02:30 PM\")\n    CallHistoryRow(CallDirection.Missed, meta = \"Yesterday\", time = \"11:04 AM\")\n    CallHistoryRow(CallDirection.Outgoing, meta = \"12 July • 2 Min.\", time = \"06:15 PM\")\n}",
+    "With trailing": "CallHistoryList {\n    // Compose: no custom trailing slot; onCallClick adds the only trailing button (call back, not play)\n    CallHistoryRow(CallDirection.Incoming, meta = \"Today • 2 Min.\", time = \"03:21 PM\", onCallClick = {})\n}"
+  },
+  "call-status": {
+    "All indicators": "Column(\n    Modifier.fillMaxWidth(),\n    horizontalAlignment = Alignment.CenterHorizontally,\n    verticalArrangement = Arrangement.spacedBy(12.dp),\n) {\n    DayDivider(\"Today\")\n    ThreadEvent(\"Call Started 03:31\")\n    ThreadEvent(\"Call Ended 03:31\")\n    ThreadNotice(\"Call has ended. You are now talking to your AI assistant.\")\n}",
+    "In a thread": "ChatWallpaper {\n    Column(\n        Modifier.fillMaxWidth().padding(vertical = 16.dp),\n        horizontalAlignment = Alignment.CenterHorizontally,\n        verticalArrangement = Arrangement.spacedBy(12.dp),\n    ) {\n        DayDivider(\"12 July\")\n        ThreadEvent(\"Call Started 18:02\")\n        ChatBubble(type = ChatBubbleType.Outgoing, sender = \"Equal AI\", timestamp = \"18:02\", message = \"Hi, who is this?\")\n        ChatBubble(type = ChatBubbleType.Incoming, incomingCategory = EqualCategory.NA, sender = \"Amit Nanda\",\n            timestamp = \"18:02\", message = \"It's Amit. Dinner at mine this Sunday, 8 PM?\")\n        ThreadEvent(\"Call Ended 18:04\")\n        ThreadNotice(\"Call has ended. You are now talking to your AI assistant.\")\n    }\n}"
+  },
+  "call-summary": {
+    "With recording and share": "var playing by remember { mutableStateOf(false) }\nvar speed by remember { mutableStateOf(PlaybackSpeed.X1) }\n\nCallSummaryBubble(\n    summary = \"Amit invited you to dinner this Sunday, 8 PM at his place. He asked you to confirm by tonight.\",\n    timestamp = \"03:21\",\n    voiceNote = {\n        // Compose: the player is controlled; drive progress/elapsed from your media player.\n        VoiceNotePlayer(isPlaying = playing, onPlayPauseClick = { playing = !playing },\n            progress = 0f, elapsed = \"0:00\", total = \"2:37\",\n            speed = speed, onSpeedChange = { speed = it })\n    },\n    onShareClick = {},\n)",
+    "Instruction applied": "CallSummaryBubble(\n    summary = \"Priya from Dr. Mehta's clinic confirmed your appointment for tomorrow at 10 AM. Bring your previous reports.\",\n    timestamp = \"03:32\",\n    tag = CallSummaryTag(label = \"Instruction Applied\", emoji = \"🪄\"),\n    modifier = Modifier.width(264.dp),\n)",
+    "Summary only": "// No voiceNote slot = no recording player.\nCallSummaryBubble(\n    summary = \"Vijay from NoBroker called with an offer on a 2BHK flat in Sector 12. You said you were not interested and ended the call.\",\n    timestamp = \"03:21\",\n)",
+    "Voice player": "var playing by remember { mutableStateOf(false) }\nvar speed by remember { mutableStateOf(PlaybackSpeed.X1) }\n\n// Compose: no `seed`; pass `samples` for a recording-specific waveform (defaults are fixed).\nVoiceNotePlayer(\n    isPlaying = playing,\n    onPlayPauseClick = { playing = !playing },\n    progress = 0f,\n    elapsed = \"0:00\",\n    total = \"1:34\",\n    speed = speed,\n    onSpeedChange = { speed = it },\n)"
+  },
+  "cancel-sheet": {
+    "Feedback": "var reason by remember { mutableStateOf(\"\") }\nCancelSheet(step = CancelStep.Feedback, reason = reason, onReasonChange = { reason = it },\n    onProceed = { /* next step */ }, inline = true)",
+    "Feedback filled": "var reason by remember { mutableStateOf(\"Felt it too expensive, I hope it would be under my budget\") }\nCancelSheet(step = CancelStep.Feedback, reason = reason, onReasonChange = { reason = it },\n    onProceed = { /* next step */ }, inline = true)",
+    "Are you really sure?": "CancelSheet(step = CancelStep.Confirm, accessUntil = \"15 June 2026\", onKeep = { /* close */ },\n    onConfirm = { /* cancel subscription */ }, inline = true)",
+    "Request submitted": "CancelSheet(step = CancelStep.Submitted, accessUntil = \"15 June 2026\", onRedirect = { /* go home */ }, inline = true)"
+  },
+  "chat-actions": {
+    "Assistant turn": "EqualTheme {\n    AiTurn(\n        text = \"Are you sure? You’ll not get any call from them even if it’s important\",\n        actions = listOf(ReplyAction(label = \"Mute\", emoji = \"🔕\", onClick = { /* mute */ })),\n    )\n}",
+    "Hold to speak": "EqualTheme {\n    HoldToSpeakBar(onHold = { /* record */ }, onKeyboard = { /* show keyboard */ })\n}",
+    "Edit bubble": "EqualTheme {\n    var draft by remember { mutableStateOf(\"Hi Amit! Count me in for Sunday 8 PM. See you there 👍\") }\n    // Over the chat dimmed with EditDimColor; lift above the keyboard with imePadding()\n    Box(Modifier.background(EditDimColor)) {\n        EditBubble(value = draft, onValueChange = { draft = it }, onDone = { /* save */ }, autoFocus = true)\n    }\n}",
+    "New contact: iOS parity": "EqualTheme {\n    NewContactForm(\n        value = NewContactValue(first = \"Rahul (Electrician)\", phone = \"+91 98717 46113\"),\n        variant = NewContactVariant.Grouped,\n        onClose = { /* close */ },\n        onSave = { /* save */ },\n    )\n}",
+    "New contact: WhatsApp parity": "EqualTheme {\n    var sync by remember { mutableStateOf(true) }\n    NewContactForm(\n        value = NewContactValue(first = \"Rahul (Electrician)\", phone = \"+91 98717 46113\", sync = sync),\n        variant = NewContactVariant.Outlined,\n        onSave = { /* save */ },\n        onSync = { sync = it },\n    )\n}",
+    "Offline": "EqualTheme {\n    OfflineSheet(onRefresh = { /* refresh */ })   // over a chat\n    OfflineScreen(onRetry = { /* retry */ })      // nothing to show yet\n}"
+  },
+  "chat-bubble": {
+    "A call thread": "// Compose: no MessageList; a Column with 12dp spacing gives the between-group rhythm.\nColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    ChatBubble(type = ChatBubbleType.Outgoing, sender = \"Equal AI\", timestamp = \"03:21\", message = \"Hi, who is this?\")\n    ChatBubble(type = ChatBubbleType.Incoming, sender = \"Dr Mehta Clinic\", timestamp = \"03:21\",\n        message = \"This is Priya from Dr. Mehta's clinic. Your appointment is confirmed for tomorrow.\")\n    ChatBubble(type = ChatBubbleType.Outgoing, sender = \"You\", timestamp = \"03:21\", message = \"Yes, I'll be there at 10 AM\")\n    ChatBubble(type = ChatBubbleType.Incoming, sender = \"Dr Mehta Clinic\", timestamp = \"03:21\",\n        message = \"Great. Please bring your previous reports too.\")\n    ChatBubble(type = ChatBubbleType.Assistant, sender = \"Equal AI\", timestamp = \"03:21\",\n        message = \"Hey Keshav! Here is the summary of your call\")\n}",
+    "Tails and grouping": "Column {\n    ChatBubble(type = ChatBubbleType.Incoming, incomingCategory = EqualCategory.RealEstate,\n        sender = \"Vijay · NoBroker\", timestamp = \"03:21\", tail = true,\n        message = \"I have an offer on a 2BHK flat in Sector 12.\")\n    // Follow-up in the same group: 4dp gap, no avatar, no sender line.\n    ChatBubble(type = ChatBubbleType.Incoming, incomingCategory = EqualCategory.RealEstate,\n        isFirstInGroup = false, timestamp = \"03:21\", modifier = Modifier.padding(top = 4.dp),\n        message = \"Are you free for a site visit this weekend?\")\n    ChatBubble(type = ChatBubbleType.Outgoing, sender = \"Equal AI\", timestamp = \"03:22\", tail = true,\n        modifier = Modifier.padding(top = 12.dp), message = \"Thanks, but Keshav is not interested right now.\")\n}",
+    "Bare content": "// Compose: ChatBubble has no `bare` mode; lay the AI avatar beside the card yourself.\nRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\n    AiAvatar(size = AiAvatarSize.Small)\n    CallSummaryBubble(\n        summary = \"Delivery agent will arrive between 4 and 5 PM.\",\n        timestamp = \"03:21\",\n        modifier = Modifier.width(240.dp),\n    )\n}"
+  },
+  "chat-header": {
+    "Default": "ChatHeader(\n    name = \"Amit Nanda\",\n    subtitle = \"+91 98717 46113\",\n    initials = \"AN\",\n    onBackClick = {},\n    onCallClick = {},\n    onMoreClick = {},\n)",
+    "Live call": "ChatHeader(\n    name = \"Arnav Raj\",\n    subtitle = \"You have a visitor\",\n    subtitleIsPhone = false,\n    variant = ChatHeaderVariant.LiveCall,\n    onBackClick = {},\n    onTakeoverClick = {},\n)",
+    "Selection mode": "var allSelected by remember { mutableStateOf(false) }\n\nSelectionChatHeader(\n    selectedCount = if (allSelected) 3 else 1,\n    allSelected = allSelected,\n    onSelectAllChange = { allSelected = it },\n    onBackClick = {},\n    onMarkReadClick = {},\n    onDeleteClick = {},\n)",
+    "Home": "var on by remember { mutableStateOf(true) }\n\nHomeHeader(assistantOn = on, onAssistantChange = { on = it })",
+    "Takeover pill": "TakeoverPill(onClick = {})"
+  },
+  "chat-list-item": {
+    "Unread and read": "ChatListItem(\n    name = \"Arnav Raj\",\n    preview = \"You have a visitor\",\n    date = \"Yesterday\",\n    state = ChatListItemState.Unread,\n    unreadCount = 5,\n    category = EqualCategory.NA,\n    chips = listOf(\n        ActionChipData(\"Call Back\", \"📞\"),\n        ActionChipData(\"Update Address\", \"✏️\"),\n        ActionChipData(\"Add to Calendar\", \"🗓️\"),\n    ),\n)\nChatListItem(\n    name = \"Amit Nanda\",\n    preview = \"Count me in for Sunday 8 PM 👍\",\n    date = \"12 July\",\n    initials = \"AN\",\n    chips = listOf(ActionChipData(\"Call Back\", \"📞\")),\n)",
+    "Long-press to select": "var selected by remember { mutableStateOf(false) }\n\nChatListItem(\n    name = \"Dr Mehta Clinic\",\n    preview = \"Appointment confirmed for tomorrow, 10 AM\",\n    date = \"03:21\",\n    state = if (selected) ChatListItemState.Selected else ChatListItemState.Unread,\n    unreadCount = 2,\n    category = EqualCategory.Others,\n    chips = listOf(ActionChipData(\"Add to Calendar\", \"🗓️\"), ActionChipData(\"Call Back\", \"📞\")),\n    onLongClick = { selected = true },\n    onClick = { selected = false },\n)",
+    "The list": "val callBack = listOf(ActionChipData(\"Call Back\", \"📞\"))\nColumn {\n    ChatListItem(name = \"Amit Nanda\", preview = \"Count me in for Sunday 8 PM 👍\", date = \"12 July\",\n        initials = \"AN\", chips = callBack)\n    ChatListItem(name = \"Vijay · NoBroker\", preview = \"Offer on a 2BHK flat in Sector 12\", date = \"10 July\",\n        category = EqualCategory.RealEstate, chips = callBack)\n    ChatListItem(name = \"Swiggy Delivery\", preview = \"Your order is at the gate\", date = \"09 July\",\n        category = EqualCategory.Delivery, chips = listOf(ActionChipData(\"Update Address\", \"✏️\")))\n    ChatListItem(name = \"HDFC Bank\", preview = \"Pre-approved loan offer. You said not interested\", date = \"08 July\",\n        category = EqualCategory.Financial, chips = callBack)\n}"
+  },
+  "chat-wallpaper": {
+    "Behind a thread": "ChatWallpaper(Modifier.fillMaxSize()) {\n    Column(\n        Modifier.fillMaxWidth().padding(vertical = 16.dp),\n        horizontalAlignment = Alignment.CenterHorizontally,\n        verticalArrangement = Arrangement.spacedBy(12.dp),\n    ) {\n        DayDivider(\"Today\")\n        ChatBubble(type = ChatBubbleType.Outgoing, sender = \"Equal AI\", timestamp = \"03:21\", message = \"Hi, who is this?\")\n        ChatBubble(type = ChatBubbleType.Incoming, sender = \"Dr Mehta Clinic\", timestamp = \"03:21\",\n            message = \"This is Priya from Dr. Mehta's clinic. Your appointment is confirmed for tomorrow.\")\n    }\n}"
+  },
+  "checkbox": {
+    "Interactive": "var all by remember { mutableStateOf(false) }\nvar loanOffers by remember { mutableStateOf(false) }\n\n// Compose: no label / labelVariant params; put an EqualText beside the box.\nRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {\n    EqualCheckbox(checked = all, onCheckedChange = { all = it })\n    EqualText(text = \"Select All\", style = EqualTheme.type.bodyLarge, color = EqualTheme.colors.textPrimary)\n}\nRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {\n    EqualCheckbox(checked = loanOffers, onCheckedChange = { loanOffers = it })\n    EqualText(text = \"Loan Offers\", style = EqualTheme.type.body1, color = EqualTheme.colors.textPrimary)\n}",
+    "Sizes and bare": "Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {\n    EqualCheckbox(checked = true, onCheckedChange = {}, size = 18.dp)\n    EqualCheckbox(checked = false, onCheckedChange = {}, size = 18.dp)\n    // Compose: default size is 18.dp (web defaults to 22), so pass 22.dp explicitly.\n    EqualCheckbox(checked = true, onCheckedChange = {}, size = 22.dp)\n    EqualCheckbox(checked = false, onCheckedChange = {}, size = 22.dp)\n}",
+    "In the selection header": "val ids = listOf(\"arnav\", \"amit\", \"priya\")\nvar selected by remember { mutableStateOf(setOf<String>()) }\n\nSelectionChatHeader(\n    selectedCount = selected.size,\n    allSelected = selected.size == ids.size,\n    onSelectAllChange = { all -> selected = if (all) ids.toSet() else emptySet() },\n    onBackClick = {},\n    onMarkReadClick = {},\n    onDeleteClick = {},\n)"
+  },
+  "composer": {
+    "Interactive": "val sent = remember { mutableStateListOf<String>() }\nvar text by remember { mutableStateOf(\"\") }\n\n// Compose: always controlled; clear the value yourself after send.\nVoiceInputBar(\n    value = text,\n    onValueChange = { text = it },\n    onSend = {\n        sent += text.trim()\n        text = \"\"\n    },\n)",
+    "States": "var text by remember { mutableStateOf(\"Sure, I'll be there!\") }\n\nColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    VoiceInputBar(value = \"\", onValueChange = {}, onSend = {})\n    // Compose: no forceFocus; the focused look appears when the field has focus.\n    VoiceInputBar(value = text, onValueChange = { text = it }, onSend = {})\n}"
+  },
+  "contact-info-header": {
+    "Saved contact": "ContactInfoHeader(\n    name = \"Amit Nanda\",\n    phone = \"+91 98717 46113\",\n    initials = \"AN\",\n    actions = listOf(\n        ContactInfoAction(\"Call\", EqualIcons.Call, onClick = {}),\n        ContactInfoAction(\"Mute\", EqualIcons.SilentMode, onClick = {}),\n        ContactInfoAction(\"Save\", EqualIcons.PersonAdd, onClick = {}),\n        ContactInfoAction(\"Share\", EqualIcons.Share, onClick = {}),\n    ),\n)",
+    "Unknown caller, with history": "ContactInfoHeader(\n    name = \"Arnav Raj\",\n    phone = \"+91 98717 46113\",\n    category = EqualCategory.Career,\n    // Call · Mute · Save · Share\n    actions = defaultContactInfoActions(onCall = {}, onMute = {}, onSave = {}, onShare = {}),\n)\nSectionHeader(title = \"Call history\")\nRowGroup {\n    CallHistoryRow(direction = CallDirection.Incoming, meta = \"Today • 30 Sec.\", time = \"02:30 PM\")\n    CallHistoryRow(direction = CallDirection.Missed, meta = \"Yesterday\", time = \"11:04 AM\")\n}"
+  },
+  "context-menu": {
+    "Chat long-press": "ContextMenu(\n    items = listOf(\n        ContextMenuItem(\"Mark as read\", EqualIcons.DoneAll, onClick = {}),\n        ContextMenuItem(\"Call back\", EqualIcons.Call, onClick = {}),\n        ContextMenuItem(\"Delete chat\", EqualIcons.Delete, onClick = {}, destructive = true),\n    ),\n)",
+    "Overflow menu": "OverflowMenu(\n    items = listOf(\n        ContextMenuItem(\"Edit\", EqualIcons.Edit, onClick = {}),\n        ContextMenuItem(\"Delete instruction\", EqualIcons.Delete, onClick = {}, destructive = true),\n    ),\n)"
+  },
+  "coupon-ticket": {
+    "Available": "CouponTicket(code = \"EQUAL25\", description = \"Save Flat ₹100 with this Code\", discount = \"25% OFF\", onApply = {})",
+    "Applied": "CouponTicket(code = \"EQUAL25\", description = \"Save Flat ₹100 with this Code\", discount = \"25% OFF\", applied = true)"
+  },
+  "dialog": {
+    "Inline": "// EqualDialogContent is the dialog surface without the window, for inline use\nEqualDialogContent(\n    title = \"Turn off Call Learning?\",\n    subject = \"Call learning\",\n    body = \"Your assistant will stop learning from new calls. What it already knows stays until you clear it.\",\n    confirmLabel = \"Turn off\",\n    onConfirm = {},\n    onDismiss = {},\n)",
+    "Destructive": "EqualDialogContent(\n    title = \"Delete address?\",\n    subject = \"Work\",\n    body = \"Your assistant will no longer share this address with delivery partners.\",\n    confirmLabel = \"Delete\",\n    destructive = true,\n    onConfirm = {},\n    onDismiss = {},\n)",
+    "Overlay + snackbar": "var open by remember { mutableStateOf(false) }\nvar toast by remember { mutableStateOf<String?>(null) }\nEqualButton(text = \"Turn off Call Learning\", onClick = { toast = null; open = true })\nif (open) {\n    EqualDialog(\n        onDismissRequest = { open = false },\n        title = \"Turn off Call Learning?\",\n        subject = \"Call learning\",\n        body = \"Your assistant will stop learning from new calls. What it already knows stays until you clear it.\",\n        confirmLabel = \"Turn off\",\n        onConfirm = { open = false; toast = \"Call learning turned off\" },\n    )\n}\ntoast?.let { EqualSnackbar(message = it, actionLabel = \"Undo\", onActionClick = { toast = null }) }",
+    "Snackbars": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    EqualSnackbar(message = \"Contact saved\")\n    EqualSnackbar(message = \"Chat deleted\", actionLabel = \"Undo\", onActionClick = {})\n}"
+  },
+  "discount-badge": {
+    "Badges": "Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {\n    DiscountBadge()\n    DiscountBadge(label = \"Special Coupon Applied!\")\n}",
+    "Price drop": "var replay by remember { mutableIntStateOf(0) }\nColumn(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    // Strike the old price → land the new one with \"Saved ₹100\" → pop the badge\n    key(replay) {\n        PriceTag(price = \"149\", was = 249, badge = \"Special Coupon Applied!\", animate = true)\n    }\n    EqualButton(text = \"Replay\", onClick = { replay++ }, variant = EqualButtonVariant.Secondary, size = EqualButtonSize.Sm)\n}"
+  },
+  "empty-state": {
+    "Addresses empty": "EmptyState(\n    title = \"Never explain your address again\",\n    body = \"Save frequently used addresses, and your assistant will use them to handle delivery, pickup calls, etc. more naturally.\",\n    // Compose: the illustration is a slot, not an asset name\n    illustration = { EqualAssetImage(EqualAssets.IllustrationAddressesEmpty, 96.dp) },\n    actionLabel = \"Add new Address\",\n    onActionClick = {},\n)",
+    "No results": "val query = \"Priya\"\nEmptyState(title = \"No chats found\", body = \"Nothing matches \\\"$query\\\". Try a name or number.\")",
+    "Illustration header": "IllustrationHeader(asset = EqualAssets.IllustrationSilentMode)\nRowGroup {\n    ToggleRow(\n        label = \"Mute Promotional Calls\",\n        description = \"Equal AI Assistant can identify Promotional Calls and automatically mute them\",\n        descriptionWraps = true,\n        checked = true,\n        onCheckedChange = {},\n    )\n}"
+  },
+  "faq": {
+    "Accordion": "val faq = listOf(\n    FaqItem(\"What do I get with Equal Unlimited?\", \"Unlimited call screenings, full recordings, summaries, and zero daily cap.\"),\n    FaqItem(\"Will Equal screen all types of calls?\", \"Yes! Delivery, ride pickups, spam, loan calls, Equal handles them all.\"),\n    FaqItem(\"Can I cancel my Equal Unlimited plan later?\", \"Yes, cancel anytime. Your Unlimited access stays active until the end of your billing period.\"),\n    FaqItem(\"Will I get a refund if I’m not happy with Equal Unlimited?\", \"We don’t offer refunds, but you can write to our support team and we’ll do our best to help.\"),\n)\nFaqList(items = faq, defaultOpen = listOf(3))",
+    "Section label": "DividerLabel(text = \"Why people choose\")"
+  },
+  "feature-list": {
+    "What You Get": "Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    DividerLabel(text = \"What You Get\")\n    FeatureList(items = UnlimitedFeatures)\n}"
+  },
+  "feedback-card": {
+    "Interactive": "var rating by remember { mutableIntStateOf(0) }\nFeedbackCard(\n    question = \"How would you rate the call?\",\n    rating = rating,\n    onRatingChange = { rating = it },\n    // Compose: the share callback takes no argument; read `rating` from state\n    onShareFeedbackClick = {},\n)",
+    "Rated": "// Compose: always controlled, so the question and rating callback are required\nFeedbackCard(\n    question = \"How would you rate the call?\",\n    rating = 4,\n    onRatingChange = {},\n    onShareFeedbackClick = {},\n)"
+  },
+  "flow-addresses": {
+    "empty": "EqualTheme {\n    AddressesScreen(onBack = {}, initial = emptyList())\n}",
+    "list": "EqualTheme {\n    AddressesScreen(onBack = {}, initial = SampleAddresses)\n}",
+    "edit": "EqualTheme {\n    AddressesScreen(onBack = {}, openEdit = SampleAddresses[3].id)\n}",
+    "delete": "EqualTheme {\n    AddressesScreen(onBack = {}, confirmDelete = SampleAddresses[0].id)\n}"
+  },
+  "flow-call-back": {
+    "live": "EqualTheme {\n    // Runs live from the chat: tap the chip, then follow the task sheet\n    ChatActionScreen(action = ChatAction.CallBack, onBack = { /* pop */ })\n}",
+    "ask": "EqualTheme {\n    ChatActionScreen(action = ChatAction.CallBack, step = \"ask\", onBack = { /* pop */ })\n}",
+    "dialer": "EqualTheme {\n    ChatActionScreen(action = ChatAction.CallBack, step = \"dialer\", onBack = { /* pop */ })\n}",
+    "done": "EqualTheme {\n    ChatActionScreen(action = ChatAction.CallBack, step = \"done\", onBack = { /* pop */ })\n}",
+    "missed-reason": "EqualTheme {\n    // The card's Call back opens the ask step\n    ChatActionScreen(action = ChatAction.CallBack, missed = MissedCase.Reason, onBack = { /* pop */ })\n}",
+    "missed-name": "EqualTheme {\n    // The card's Call back opens the ask step\n    ChatActionScreen(action = ChatAction.CallBack, missed = MissedCase.Name, onBack = { /* pop */ })\n}",
+    "missed-unknown": "EqualTheme {\n    // The card's Call back opens the ask step\n    ChatActionScreen(action = ChatAction.CallBack, missed = MissedCase.Unknown, onBack = { /* pop */ })\n}"
+  },
+  "flow-call-handling": {
+    "home-new": "EqualTheme {\n    // No chats yet: the search field hides and the hero promo fills the home\n    HomeScreenSample(\n        chats = emptyList(),\n        promo = { MeetAssistantHero() },\n        assistantDescription = \"Equal is managing your calls!\",\n    )\n}",
+    "setup-prompt": "EqualTheme {\n    HomeScreenSample(\n        chats = emptyList(),\n        promo = { MeetAssistantHero() },\n        assistantDescription = \"Equal is managing your calls!\",\n        callSetup = CallSetupOverlay.Prompt,\n        onCallSetup = { /* open CallHandlingScreen() */ },\n    )\n}",
+    "question": "EqualTheme {\n    // Runs live: question → (permissions) → exclude → Perfect!, or → All Sorted!\n    CallHandlingScreen(onBack = { /* pop */ }, onDone = { /* pop to home */ })\n}",
+    "exclude": "EqualTheme {\n    CallHandlingScreen(step = CallHandlingStep.Exclude, picked = emptyList())\n}",
+    "exclude-picked": "EqualTheme {\n    CallHandlingScreen(step = CallHandlingStep.Exclude)\n}",
+    "perfect": "EqualTheme {\n    CallHandlingScreen(step = CallHandlingStep.Perfect)\n}",
+    "unknown": "EqualTheme {\n    CallHandlingScreen(mode = CallMode.Unknown)\n}",
+    "whose": "EqualTheme {\n    // Copy experiment\n    CallHandlingScreen(copy = CallHandlingCopy.Whose, mode = CallMode.Unknown)\n}",
+    "sorted": "EqualTheme {\n    CallHandlingScreen(step = CallHandlingStep.Sorted, mode = CallMode.Unknown)\n}",
+    "no-permission": "EqualTheme {\n    CallHandlingScreen(copy = CallHandlingCopy.Whose, mode = CallMode.Unknown, contactsAllowed = false)\n}",
+    "perm-contacts": "EqualTheme {\n    CallHandlingScreen(copy = CallHandlingCopy.Whose, step = CallHandlingStep.PermContacts, contactsAllowed = false)\n}",
+    "perm-history": "EqualTheme {\n    CallHandlingScreen(copy = CallHandlingCopy.Whose, step = CallHandlingStep.PermHistory)\n}",
+    "finish": "EqualTheme {\n    HomeScreenSample(\n        chats = emptyList(),\n        promo = { MeetAssistantHero() },\n        assistantDescription = \"Equal is managing your calls!\",\n        callSetup = CallSetupOverlay.Finish,\n        onCallSetup = { /* open CallHandlingScreen(step = CallHandlingStep.Exclude) */ },\n        onSkipCallSetup = { /* answer everyone */ },\n    )\n}",
+    "always-ring": "EqualTheme {\n    AlwaysRingScreen(onBack = { /* pop */ })\n}",
+    "no-contacts": "EqualTheme {\n    DirectCallsEmptyScreen(onBack = { /* pop */ }, onDone = { /* pop */ })\n}",
+    "you": "EqualTheme {\n    YouScreenSample(onOpenCallHandling = { /* open CallHandlingScreen() */ })\n}"
+  },
+  "flow-contact-info": {
+    "contact": "EqualTheme {\n    ContactInfoScreen(name = \"Amit Nanda\", phone = \"+91 9871746113\", onBack = {})\n}"
+  },
+  "flow-error-states": {
+    "generation": "EqualTheme {\n    ChatErrorScreen(state = ErrorState.Generation, onRetry = { /* retry */ })\n}",
+    "offline-reply": "EqualTheme {\n    ChatErrorScreen(state = ErrorState.OfflineReply, onRetry = { /* retry */ })\n}",
+    "voice": "EqualTheme {\n    ChatErrorScreen(state = ErrorState.Voice)\n}",
+    "offline-sheet": "EqualTheme {\n    ChatErrorScreen(state = ErrorState.OfflineSheet, onRetry = { /* refresh */ })\n}",
+    "offline-screen": "EqualTheme {\n    ChatErrorScreen(state = ErrorState.OfflineScreen, onRetry = { /* retry */ })\n}"
+  },
+  "flow-global-mya": {
+    "home": "EqualTheme {\n    // Home: tap the green orb (nav FAB) to open the live sheet\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) })\n}",
+    "greeting": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Greeting)\n}",
+    "voice": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Voice)\n}",
+    "typing": "EqualTheme {\n    // Real use: the system keyboard opens and the sheet lifts with imePadding()\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Typing)\n}",
+    "typed": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Typed)\n}",
+    "voice-prompt": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.VoicePrompt)\n}",
+    "recording": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Recording)\n}",
+    "hold": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Hold)\n}",
+    "hold-cancel": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.HoldCancel)\n}",
+    "sent": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Sent)\n}",
+    "thinking": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Thinking)\n}",
+    "reminder": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Reminder)\n}",
+    "confirmed": "EqualTheme {\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistant = MyaStage.Confirmed)\n}",
+    "after": "EqualTheme {\n    // After Confirm: the chat the assistant acted on reads \"Reminder added\"\n    HomeScreenSample(chats = MyaSampleChats, promo = { MeetAssistantCarousel(onDismiss = {}) }, assistantResult = MyaReminderResult)\n}",
+    "chat-ai": "EqualTheme {\n    // Tap Reply on WhatsApp (or send a message) to open the task sheet\n    ChatScreenSample(name = \"Amit Nanda\", initials = \"AN\", category = EqualCategory.NA, subtitle = \"+91 98717 46113\")\n}",
+    "chat-task": "EqualTheme {\n    ChatScreenSample(name = \"Amit Nanda\", initials = \"AN\", category = EqualCategory.NA, subtitle = \"+91 98717 46113\", aiTask = ChatTaskStage.Draft)\n}",
+    "chat-sending": "EqualTheme {\n    ChatScreenSample(name = \"Amit Nanda\", initials = \"AN\", category = EqualCategory.NA, subtitle = \"+91 98717 46113\", aiTask = ChatTaskStage.Sending)\n}"
+  },
+  "flow-instructions": {
+    "hub": "EqualTheme {\n    InstructionsFlow(onBack = {}, initialActive = emptyList())\n}",
+    "preset": "EqualTheme {\n    InstructionsFlow(initialActive = emptyList(), initialView = InstructionsView.PresetDetail(\"screen\"))\n}",
+    "setup": "EqualTheme {\n    InstructionSetupDemo(which = SetupDemo.Decline)\n}",
+    "setup-input": "EqualTheme {\n    InstructionSetupDemo(which = SetupDemo.Delivery)\n}",
+    "active": "EqualTheme {\n    InstructionsFlow(initialView = InstructionsView.Active)\n}",
+    "active-empty": "EqualTheme {\n    InstructionsFlow(initialActive = emptyList(), initialView = InstructionsView.Active)\n}",
+    "no-recs": "EqualTheme {\n    InstructionsFlow(noRecommendations = true)\n}"
+  },
+  "flow-known-calls": {
+    "answering": "EqualTheme {\n    CallNotification(name = \"Mom\", state = CallNotificationState.Answering)\n}",
+    "summary": "EqualTheme {\n    CallNotification(name = \"Mom\", state = CallNotificationState.Summary, summary = SampleCallSummary)\n}",
+    "expanded": "EqualTheme {\n    CallNotification(\n        name = \"Mom\",\n        state = CallNotificationState.Expanded,\n        replies = listOf(\"Takeover\", \"I’ll bring them all\", \"I’ll call back to get more\"),\n        onReply = { /* say it (it == \"Takeover\": pick up) */ },\n        onAnswer = { /* pick up */ },\n    )\n}",
+    "connecting": "EqualTheme {\n    // Docs: on the coded wallpaper. On device the system draws the shade.\n    KnownCallNotificationScreen(state = CallNotificationState.Connecting)\n}",
+    "chat": "EqualTheme {\n    ChatScreenSample(\n        name = \"Mom\",\n        category = EqualCategory.HomeServices,\n        live = true,\n        ongoing = \"02:34\",\n        onTakeover = { /* pick up */ },\n    )\n}"
+  },
+  "flow-monetization": {
+    "home-free": "EqualTheme {\n    // Free plan: rows from index 4 on are locked; tapping one opens the paywall\n    HomeScreenSample(\n        tier = PlanTier.Free,\n        lockedFrom = 4,\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onLockedChat = { /* open PaywallScreen(touchpoint = PaywallTouchpoint.ChatList) */ },\n    )\n}",
+    "chat-locked": "EqualTheme {\n    // Free plan: bubbles blurred, recording locked, Unlock All Details instead of the AI panel\n    ChatScreenSample(lock = ChatLock.Details, onUnlock = { /* open PaywallScreen(touchpoint = PaywallTouchpoint.Chat) */ })\n}",
+    "chat-audio": "EqualTheme {\n    // Free plan: only the call summary recording is locked (Unlock Audio)\n    ChatScreenSample(lock = ChatLock.Audio, onUnlock = { /* open PaywallScreen(touchpoint = PaywallTouchpoint.Audio) */ })\n}",
+    "paywall": "EqualTheme {\n    // Live: APPLY drops ₹249 to ₹149; Unlock → Waiting → Confirmed → Welcome\n    PaywallScreen(touchpoint = PaywallTouchpoint.ChatList)\n}",
+    "paywall-chat": "EqualTheme {\n    PaywallScreen(touchpoint = PaywallTouchpoint.Chat)\n}",
+    "paywall-audio": "EqualTheme {\n    PaywallScreen(touchpoint = PaywallTouchpoint.Audio, coupon = PaywallCoupon.Applied, subtitle = PaywallSubtitle.Get)\n}",
+    "waiting": "EqualTheme {\n    PaywallScreen(overlay = PaywallOverlay.Waiting)\n}",
+    "confirmed": "EqualTheme {\n    PaywallScreen(overlay = PaywallOverlay.Confirmed)\n}",
+    "pending": "EqualTheme {\n    PaywallScreen(overlay = PaywallOverlay.Pending)\n}",
+    "failed": "EqualTheme {\n    PaywallScreen(overlay = PaywallOverlay.Failed)\n}",
+    "help": "EqualTheme {\n    PaywallScreen(overlay = PaywallOverlay.Help)\n}",
+    "welcome": "EqualTheme {\n    PaywallScreen(overlay = PaywallOverlay.Welcome)\n}",
+    "home-paid": "EqualTheme {\n    // Paid (the default tier): nothing locked\n    HomeScreenSample(promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) })\n}",
+    "settings": "EqualTheme {\n    YouScreenSample(plan = YouPlan.Active, onManagePlan = { /* open SubscriptionScreen() */ })\n}",
+    "subscription": "EqualTheme {\n    // Live: Cancel Subscription → feedback → confirm → submitted → cancelled (Re-Subscribe)\n    SubscriptionScreen()\n}",
+    "cancel-feedback": "EqualTheme {\n    SubscriptionScreen(cancelStep = CancelStep.Feedback)\n}",
+    "cancel-filled": "EqualTheme {\n    SubscriptionScreen(cancelStep = CancelStep.Feedback, reason = \"Felt it too expensive, I hope it would be under my budget\")\n}",
+    "cancel-confirm": "EqualTheme {\n    SubscriptionScreen(cancelStep = CancelStep.Confirm)\n}",
+    "cancel-submitted": "EqualTheme {\n    SubscriptionScreen(cancelStep = CancelStep.Submitted)\n}",
+    "cancelled": "EqualTheme {\n    SubscriptionScreen(state = SubscriptionState.Cancelled)\n}",
+    "settings-restore": "EqualTheme {\n    // Plan ended: free tier, Restore Plan\n    YouScreenSample(tier = PlanTier.Free, plan = YouPlan.Restore, onManagePlan = { /* open PaywallScreen() */ })\n}",
+    "settings-reactivate": "EqualTheme {\n    // Autopay off: Reactivate plan + the attached banner under the plan card\n    YouScreenSample(plan = YouPlan.Reactivate, onManagePlan = { /* open SubscriptionScreen() */ })\n}",
+    "chat-lapsed": "EqualTheme {\n    // Plan lapsed: readable, Reactivate banner under the header\n    ChatScreenSample(lock = ChatLock.Lapsed, onUnlock = { /* open SubscriptionScreen() */ })\n}"
+  },
+  "flow-monetization-touchpoints": {
+    "expired-home": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, planExpired = true, official = OfficialNotice.PlanExpired)\n}",
+    "expired-chat": "EqualTheme {\n    ChatScreenSample(official = OfficialNotice.PlanExpired)\n}",
+    "expired-paywall": "EqualTheme {\n    PaywallScreen(touchpoint = PaywallTouchpoint.Recordings, cta = \"Get Equal AI Unlimited\")\n}",
+    "expired-card": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, planExpired = true, homeNotice = HomeNotice.PlanExpired)\n}",
+    "cap-chat-home": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, assistantOff = true, official = OfficialNotice.UsageCap)\n}",
+    "cap-chat": "EqualTheme {\n    ChatScreenSample(official = OfficialNotice.UsageCap)\n}",
+    "cap-card": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, assistantOff = true, homeNotice = HomeNotice.UsageCap(callsLeft = 7, limit = 30))\n}",
+    "actions-home": "EqualTheme {\n    // Try it: a locked chip opens the sheet paywall\n    HomeScreenSample(tier = PlanTier.Free, lockedActions = true, paywallSheet = true, promo = { MeetAssistantCarousel() })\n}",
+    "actions-paywall": "EqualTheme {\n    PaywallScreen(touchpoint = PaywallTouchpoint.Actions, subtitle = PaywallSubtitle.Actions, cta = \"Get Equal AI Unlimited\")\n}",
+    "recordings": "EqualTheme {\n    ChatScreenSample(lock = ChatLock.Details)\n}",
+    "recordings-actions": "EqualTheme {\n    ChatScreenSample(lock = ChatLock.Details, summaryActions = true)\n}",
+    "recordings-paywall": "EqualTheme {\n    PaywallScreen(touchpoint = PaywallTouchpoint.RecordingsActions, cta = \"Get Equal AI Unlimited\")\n}",
+    "phone-toggle": "EqualTheme {\n    HomeScreenSample(assistantArt = AssistantToggleArt.Phone, promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) })\n}"
+  },
+  "flow-mute": {
+    "live": "EqualTheme {\n    // Runs live from the chat: tap the chip, then follow the task sheet\n    ChatActionScreen(action = ChatAction.Mute, onBack = { /* pop */ })\n}",
+    "confirm": "EqualTheme {\n    ChatActionScreen(action = ChatAction.Mute, step = \"confirm\", onBack = { /* pop */ })\n}",
+    "done": "EqualTheme {\n    ChatActionScreen(action = ChatAction.Mute, step = \"done\", onBack = { /* pop */ })\n}"
+  },
+  "flow-paywall-sheet": {
+    "sheet": "EqualTheme {\n    // Try it: Support → Help Center, tap outside → exit offer, Claim → EQUAL25 applied\n    HomeScreenSample(tier = PlanTier.Free, paywallSheetStage = PaywallSheetStage.Sheet)\n}",
+    "help": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, paywallSheetStage = PaywallSheetStage.Help)\n}",
+    "exit": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, paywallSheetStage = PaywallSheetStage.Exit)\n}",
+    "offer": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, offerStrip = true, promo = { MeetAssistantCarousel() })\n}",
+    "claimed": "EqualTheme {\n    HomeScreenSample(tier = PlanTier.Free, paywallSheetStage = PaywallSheetStage.Claimed)\n}",
+    "chat-sheet": "EqualTheme {\n    ChatScreenSample(lock = ChatLock.Details, summaryActions = true, paywallSheetStage = PaywallSheetStage.Sheet)\n}",
+    "chat-exit": "EqualTheme {\n    // In a chat the exit offer reads Leave / Keep 25% Off\n    ChatScreenSample(lock = ChatLock.Details, summaryActions = true, paywallSheetStage = PaywallSheetStage.Exit)\n}",
+    "success": "EqualTheme {\n    PaymentResultScreen(status = PaymentResultStatus.Success)\n}",
+    "pending": "EqualTheme {\n    // Try it: Refresh Status → Congratulations\n    PaymentResultScreen(status = PaymentResultStatus.Pending)\n}",
+    "failed": "EqualTheme {\n    // Try it: Retry payment → Payment Pending\n    PaymentResultScreen(status = PaymentResultStatus.Failed)\n}",
+    "pending-support": "EqualTheme {\n    PaymentResultScreen(status = PaymentResultStatus.Pending, pendingAction = PendingAction.Support)\n}",
+    "processing-chat": "EqualTheme {\n    ChatScreenSample(lock = ChatLock.Details, summaryActions = true, paymentProcessing = true)\n}",
+    "processing-paywall": "EqualTheme {\n    PaywallScreen(touchpoint = PaywallTouchpoint.RecordingsActions, processing = true)\n}",
+    "processing-home": "EqualTheme {\n    HomeScreenSample(paymentProcessing = true, promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) })\n}"
+  },
+  "flow-plan-renewal": {
+    "home-expiring": "EqualTheme {\n    // Amber strip under the header; Renew Now opens the paywall\n    HomeScreenSample(\n        planExpiry = PlanExpiry.Expiring(days = 2),\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "home-today": "EqualTheme {\n    HomeScreenSample(\n        planExpiry = PlanExpiry.Today,\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "home-expired": "EqualTheme {\n    HomeScreenSample(\n        tier = PlanTier.Free,\n        planExpiry = PlanExpiry.Expired(date = \"30th July\"),\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "value-sheet": "EqualTheme {\n    // After a call near the end of the plan: What Unlimited saved you; close or the scrim hides it\n    HomeScreenSample(\n        planExpiry = PlanExpiry.Expiring(days = 3),\n        valueSheet = ValueSheetVariant.Card,\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "value-sheet-flush": "EqualTheme {\n    // Experiment: the value card is the sheet\n    HomeScreenSample(\n        planExpiry = PlanExpiry.Expiring(days = 3),\n        valueSheet = ValueSheetVariant.Flush,\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "value-sheet-today": "EqualTheme {\n    HomeScreenSample(\n        planExpiry = PlanExpiry.Today,\n        valueSheet = ValueSheetVariant.Card,\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "value-sheet-expired": "EqualTheme {\n    HomeScreenSample(\n        tier = PlanTier.Free,\n        planExpiry = PlanExpiry.Expired(date = \"30th July\"),\n        valueSheet = ValueSheetVariant.Card,\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "quota-left": "EqualTheme {\n    // Free plan: 6 out of 30 Calls Left; Get Equal AI Unlimited opens the paywall\n    HomeScreenSample(\n        tier = PlanTier.Free,\n        quotaSheet = Quota(used = 24, limit = 30, resetsInDays = 4),\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "quota-limit": "EqualTheme {\n    // Limit Reached · 30 out of 30 (100%); rows from the 5th on are locked\n    HomeScreenSample(\n        tier = PlanTier.Free,\n        lockedFrom = 4,\n        quotaSheet = Quota(used = 30, limit = 30, resetsInDays = 2),\n        promo = { MeetAssistantCard(onCallClick = {}, onDismiss = {}) },\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "you-active": "EqualTheme {\n    YouScreenSample(plan = YouPlan.Active, onManagePlan = { /* open SubscriptionScreen() */ })\n}",
+    "manage-active": "EqualTheme {\n    // Value card (plan active until), What You Get, proof, FAQ; Cancel Subscription pinned\n    SubscriptionScreen()\n}",
+    "you-expired": "EqualTheme {\n    // Red \"Plan Expired\" pill, plain avatar; Manage plan opens the renewal page\n    YouScreenSample(\n        tier = PlanTier.Free,\n        plan = YouPlan.Expired,\n        onManagePlan = { /* open SubscriptionScreen(state = SubscriptionState.Expired) */ },\n    )\n}",
+    "manage-expired": "EqualTheme {\n    SubscriptionScreen(\n        state = SubscriptionState.Expired,\n        onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    )\n}",
+    "renew-paywall": "EqualTheme {\n    // APPLY strikes ₹249, lands ₹149 with \"Saved ₹100\" and pops Special Coupon Applied!\n    PaywallScreen(touchpoint = PaywallTouchpoint.ChatList, cta = \"Get Equal AI Unlimited\")\n}",
+    "progress": "EqualTheme {\n    // Connecting To Razorpay → Waiting for Confirmation → Verifying Transaction (every 1.4s)\n    PaywallScreen(overlay = PaywallOverlay.Waiting, cta = \"Get Equal AI Unlimited\")\n}",
+    "confirmed": "EqualTheme {\n    // Payment Confirmed with the ray burst behind the seal\n    PaywallScreen(overlay = PaywallOverlay.Confirmed, cta = \"Get Equal AI Unlimited\")\n}"
+  },
+  "flow-profile": {
+    "personal": "EqualTheme {\n    PersonalDetailsScreen(onBack = {}, onChange = { name, gender -> })\n}",
+    "silent": "EqualTheme {\n    SilentModeScreen(onBack = {})\n}",
+    "wa": "EqualTheme {\n    WhatsAppUpdatesScreen(onBack = {})\n}",
+    "wa-sheet": "EqualTheme {\n    WhatsAppUpdatesScreen(onBack = {}, showSheet = true)\n}"
+  },
+  "flow-reply-whatsapp": {
+    "live": "EqualTheme {\n    // Runs live from the chat: tap the chip, then follow the task sheet\n    ChatActionScreen(action = ChatAction.ReplyWhatsApp, onBack = { /* pop */ })\n}",
+    "draft": "EqualTheme {\n    ChatActionScreen(action = ChatAction.ReplyWhatsApp, step = \"draft\", onBack = { /* pop */ })\n}",
+    "sending": "EqualTheme {\n    ChatActionScreen(action = ChatAction.ReplyWhatsApp, step = \"sending\", onBack = { /* pop */ })\n}",
+    "edit": "EqualTheme {\n    ChatActionScreen(action = ChatAction.ReplyWhatsApp, step = \"edit\", onBack = { /* pop */ })\n}",
+    "edit-long": "EqualTheme {\n    ChatActionScreen(action = ChatAction.ReplyWhatsApp, step = \"edit-long\", onBack = { /* pop */ })\n}",
+    "done": "EqualTheme {\n    ChatActionScreen(action = ChatAction.ReplyWhatsApp, step = \"done\", onBack = { /* pop */ })\n}"
+  },
+  "flow-save-contact": {
+    "live": "EqualTheme {\n    // Runs live from the chat: tap the chip, then follow the task sheet\n    ChatActionScreen(action = ChatAction.SaveContact, onBack = { /* pop */ })\n}",
+    "review": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"review\", onBack = { /* pop */ })\n}",
+    "saved": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"saved\", onBack = { /* pop */ })\n}",
+    "edit-ask": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"edit-ask\", onBack = { /* pop */ })\n}",
+    "form": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"form\", keyboard = true, onBack = { /* pop */ })\n}",
+    "form-outlined": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"form-outlined\", keyboard = true, onBack = { /* pop */ })\n}",
+    "no-permission": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"no-permission\", onBack = { /* pop */ })\n}",
+    "resume": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"resume\", onBack = { /* pop */ })\n}",
+    "granted": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"granted\", onBack = { /* pop */ })\n}",
+    "denied": "EqualTheme {\n    ChatActionScreen(action = ChatAction.SaveContact, step = \"denied\", onBack = { /* pop */ })\n}"
+  },
+  "flow-search": {
+    "empty": "EqualTheme {\n    // keyboard = true draws the system keyboard stand-in (docs only)\n    SearchScreen(state = SearchState.Empty, keyboard = true)\n}",
+    "offline": "EqualTheme {\n    SearchScreen(state = SearchState.Offline, keyboard = true)\n}",
+    "recent": "EqualTheme {\n    // Live: type to run loading → chats → messages\n    SearchScreen(keyboard = true)\n}",
+    "no-results": "EqualTheme {\n    SearchScreen(state = SearchState.NoResults, query = \"Xyz\", keyboard = true)\n}",
+    "loading": "EqualTheme {\n    SearchScreen(state = SearchState.Loading, query = \"S\", keyboard = true)\n}",
+    "results": "EqualTheme {\n    SearchScreen(state = SearchState.Results, query = \"S\", keyboard = true)\n}",
+    "messages-loading": "EqualTheme {\n    SearchScreen(state = SearchState.MessagesLoading, query = \"S\", keyboard = true)\n}",
+    "messages": "EqualTheme {\n    SearchScreen(state = SearchState.Messages, query = \"Sa\", keyboard = true)\n}"
+  },
+  "flow-system-status": {
+    "down": "EqualTheme {\n    SystemStatusFlowSample(stage = SystemStatusStage.Unavailable)\n}",
+    "notified": "EqualTheme {\n    SystemStatusFlowSample(stage = SystemStatusStage.Notified)\n}",
+    "back": "EqualTheme {\n    SystemStatusFlowSample(stage = SystemStatusStage.BackOn)\n}",
+    "live": "EqualTheme {\n    // No stage: tap Notify, and the system recovers after recoverAfterMillis\n    SystemStatusFlowSample(recoverAfterMillis = 2500)\n}"
+  },
+  "foundations": {
+    "colour": "// Wrap the app once; colours switch with the system theme (or pass darkTheme = …)\nEqualTheme {\n    val colors = EqualTheme.colors\n    Box(\n        Modifier\n            .background(colors.bgSurface, RoundedCornerShape(EqualRadius.rLg))\n            .padding(EqualSpacing.s16),\n    ) {\n        EqualText(text = \"Equal AI\", style = EqualTheme.type.subheading, color = colors.textAction)\n    }\n    // Gradients are tokens too\n    Box(Modifier.size(64.dp).background(EqualTheme.gradients.whatsNew.toBrush(), RoundedCornerShape(EqualRadius.r2xl)))\n}",
+    "typography": "val type = EqualTheme.type\nval colors = EqualTheme.colors\nColumn {\n    EqualText(text = \"Amit Nanda\", style = type.headline, color = colors.textPrimary)\n    EqualText(text = \"Assistant Health Check\", style = type.subheading, color = colors.textPrimary)\n    EqualText(text = \"Check Real-Time Assistant Connectivity\", style = type.caption, color = colors.textTertiary)\n    EqualText(text = \"CALL HISTORY\", style = type.overline, color = colors.textTertiary)\n}",
+    "layout": "val colors = EqualTheme.colors\nval shape = RoundedCornerShape(EqualRadius.rLg)\nColumn(verticalArrangement = Arrangement.spacedBy(EqualSpacing.s12)) {\n    Box(\n        Modifier\n            .eqShadow(EqualShadows.card, shape)\n            .background(colors.bgSurface, shape)\n            .padding(horizontal = EqualSpacing.s16, vertical = EqualSpacing.s12),\n    ) {\n        EqualText(text = \"Card: radius rLg, padding s16 / s12, shadow card\", style = EqualTheme.type.body1, color = colors.textPrimary)\n    }\n}",
+    "icons": "val colors = EqualTheme.colors\nRow(horizontalArrangement = Arrangement.spacedBy(EqualSpacing.s16)) {\n    EqualIcon(EqualIcons.Call, contentDescription = \"Call\", tint = colors.textAction)\n    EqualIcon(EqualIcons.Instructions, contentDescription = null, tint = colors.textPrimary)\n    EqualIcon(EqualIcons.SilentMode, contentDescription = \"Mute\", tint = colors.textSecondary, size = 20.dp)\n}",
+    "emoji": "// Actions use Unicode emoji, never icon images\nRow(horizontalArrangement = Arrangement.spacedBy(EqualSpacing.s8)) {\n    EmojiGlyph(emoji = \"📞\", size = 16.dp)\n    EmojiGlyph(emoji = \"🗓️\", size = 16.dp)\n    EmojiGlyph(emoji = \"✏️\", size = 16.dp)\n}",
+    "brand": "Column(verticalArrangement = Arrangement.spacedBy(EqualSpacing.s16)) {\n    EqualLogo(height = 20.dp) // green in light, lime in dark\n    Row(horizontalArrangement = Arrangement.spacedBy(EqualSpacing.s12)) {\n        EqualLogoOrb(size = 36.dp)\n        EqualMascot(size = 40.dp)\n        CategoryAvatar(category = EqualCategory.Delivery, size = 48.dp)\n        ProfileAvatar(variant = ProfileAvatarVariant.Female, width = 48.dp)\n    }\n    ChatWallpaper {\n        EqualText(text = \"Messages sit on the wallpaper\", style = EqualTheme.type.body1, color = EqualTheme.colors.textPrimary)\n    }\n}"
+  },
+  "gender-selector": {
+    "Interactive": "var gender by remember { mutableStateOf(Gender.Male) }\nGenderSelector(value = gender, onValueChange = { gender = it })\nProfileAvatar(\n    variant = if (gender == Gender.Male) ProfileAvatarVariant.Male else ProfileAvatarVariant.Female,\n    width = 56.dp,\n)",
+    "In Personal Details": "var name by remember { mutableStateOf(\"Keshav\") }\nvar gender by remember { mutableStateOf(Gender.Female) }\nEqualAppBar(title = \"Personal Details\", onBackClick = {})\nEqualTextField(\n    value = name,\n    onValueChange = { name = it },\n    label = \"Name\",\n    helper = AnnotatedString(\"Your AI will call you '$name'\"),\n)\nSectionHeader(title = \"Gender\", inset = 0.dp)\nGenderSelector(value = gender, onValueChange = { gender = it })",
+    "Free vs paid": "var gender by remember { mutableStateOf(Gender.Male) }\nColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    GenderSelector(value = gender, onValueChange = { gender = it }, tier = PlanTier.Free)\n    GenderSelector(value = gender, onValueChange = { gender = it }, tier = PlanTier.Paid)\n}"
+  },
+  "help-center-sheet": {
+    "Default": "HelpCenterSheet(phone = \"+91 9876 543210\", email = \"hello@equal.in\", onCall = {}, onMail = {}, inline = true)"
+  },
+  "instruction-cards": {
+    "Recommended for you": "var added by remember { mutableStateOf(setOf<String>()) }\nif (added.size < 2) {\n    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {\n        if (\"decline\" !in added) {\n            RecommendedCard(\n                emoji = \"🚫\",\n                title = \"Decline sales & spam\",\n                description = \"Politely declines sales and insurance calls.\",\n                onAdd = { added = added + \"decline\" },\n            )\n        }\n        if (\"message\" !in added) {\n            RecommendedCard(\n                emoji = \"💬\",\n                title = \"Take a message\",\n                description = \"Takes their name, number and message.\",\n                onAdd = { added = added + \"message\" },\n            )\n        }\n    }\n} else {\n    SuggestionsComingCard()\n}",
+    "Browse presets": "PresetCard(\n    emoji = \"🛡️\", tint = PresetTint.Red, title = \"Screen & Protect\",\n    description = \"Decline spam, hold the line on loan and payments call, close wrong call\", onClick = {},\n)\nPresetCard(\n    emoji = \"📞\", tint = PresetTint.Green, title = \"Handle everyday calls\",\n    description = \"Take message, guide deliveries, relay to family, start in your language\", onClick = {},\n)\nPresetCard(\n    emoji = \"💼\", tint = PresetTint.Orange, title = \"Run my business\",\n    description = \"Capture enquiries, orders, bookings, job, and supplier calls\", onClick = {},\n)",
+    "Preset instructions": "var applied by remember { mutableStateOf(false) }\nPresetInstructionCard(\n    instruction = InstructionLibrary.declineSales,\n    applied = applied,\n    onApply = { applied = true },\n)",
+    "Active instructions": "InstructionCard(\n    instruction = Instruction(\n        id = \"decline-sales\",\n        title = \"Decline sales, promo spam calls\",\n        source = InstructionSource(emoji = \"✨\", label = \"Recommended for you\"),\n        whenText = \"The caller is selling loan, insurance, credit card, product, or another unsolicited offer\",\n        doText = \"Politely say I am not interested and end the conversation without discussing the offer\",\n    ),\n    onEdit = {},\n    onDelete = {},\n)",
+    "Preview in the setup chat": "var confirmed by remember { mutableStateOf(false) }\nInstructionPreview(\n    title = \"Decline sales calls\",\n    whenText = AnnotatedString(\"Caller is selling a loan, insurance or product\"),\n    action = AnnotatedString(\"Politely decline and end the conversation\"),\n    time = \"03:21\",\n    confirmed = confirmed,\n)"
+  },
+  "invite-card": {
+    "Default": "InviteCard(onShare = {})",
+    "Custom copy": "InviteCard(title = \"Give a month free\", subtitle = \"Share Equal AI with family\", onShare = {})"
+  },
+  "locked-content": {
+    "Locked chat rows": "Column {\n    ChatListItem(name = \"Amit Nanda\", preview = \"Amit is done with onboarding.\", date = \"Yesterday\",\n        category = EqualCategory.Career)\n    ChatListItem(name = \"Vijay CA\", preview = \"Your KYC is pending\", date = \"1 May\",\n        category = EqualCategory.Financial, locked = true, onClick = { /* open paywall */ })\n    ChatListItem(name = \"Vijay OLA\", preview = \"On the gate, need approval.\", date = \"1 Jul\",\n        category = EqualCategory.Ride, locked = true, onClick = { /* open paywall */ })\n}",
+    "Locked bubbles and audio": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    ChatBubble(type = ChatBubbleType.Outgoing, timestamp = \"03:21\", message = \"Hello, who is this?\", locked = true)\n    ChatBubble(type = ChatBubbleType.Incoming, incomingCategory = EqualCategory.RealEstate, timestamp = \"03:21\",\n        message = \"We have a 2BHK in Sector 12 with good offer\", locked = true)\n    CallSummaryBubble(\n        summary = \"Hey Keshav! Here is the summary of your call.\",\n        timestamp = \"03:22\",\n        locked = CallSummaryLock.Audio,\n        onUnlock = { /* open paywall */ },\n        voiceNote = {\n            VoiceNotePlayer(isPlaying = false, onPlayPauseClick = {}, progress = 0f, elapsed = \"0:00\",\n                total = \"2:37\", speed = PlaybackSpeed.X1, onSpeedChange = {})\n        },\n    )\n}",
+    "Unlock All Details": "UnlockDetailsCard(onUnlock = { /* open paywall */ })",
+    "Badge and wrapper": "Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {\n    LockBadge()\n    LockedContent {\n        EqualText(text = \"Hey this is vijay calling from magicbrick\", style = EqualTheme.type.body1,\n            color = EqualTheme.colors.textPrimary)\n    }\n    UnlockAudioPill(onClick = { /* open paywall */ })\n}"
+  },
+  "lottie": {
+    "Typing dots": "// res/raw/lottie_typing_dots.json (copied from assets/lottie/ by `npm run assets`)\nEqualLottie(\n    rawRes = R.raw.lottie_typing_dots,\n    width = 120.dp,\n    height = 40.dp,\n    tint = EqualTheme.colors.textAction,\n    contentDescription = \"Equal AI is typing\",\n)",
+    "Original colours, play once": "EqualLottie(rawRes = R.raw.lottie_typing_dots, width = 120.dp, height = 40.dp, iterations = 1)"
+  },
+  "meet-assistant-card": {
+    "Compact (Chats)": "MeetAssistantCard(onCallClick = {}, onDismiss = {})",
+    "Banner": "MeetAssistantCard(layout = MeetAssistantLayout.Banner, onCallClick = {}, onDismiss = {})"
+  },
+  "missed-call": {
+    "With a reason": "EqualTheme {\n    var feedback by remember { mutableStateOf<CallFeedback?>(null) }\n    MissedCallCard(\n        caller = \"Kuldeep Solanki\",\n        category = EqualCategory.RealEstate,\n        reason = buildAnnotatedString {\n            append(\"Promote \")\n            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(\"L&T Realty residential\") }\n            append(\" projects.\")\n        },\n        time = \"03:21\",\n        onCallBack = { /* call back */ },\n        feedback = feedback,\n        onFeedback = { feedback = it },\n    )\n}",
+    "Caller unknown": "EqualTheme {\n    MissedCallCard(time = \"3:31 PM\", onCallBack = { /* call back */ })\n}",
+    "Name only": "EqualTheme {\n    MissedCallCard(caller = \"Valluri\", time = \"3:31 PM\", onCallBack = { /* call back */ })\n}"
+  },
+  "monetization-experiments": {
+    "Payment results": "Row(Modifier.height(440.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {\n    PaymentResult(status = PaymentResultStatus.Success, activeTill = \"10th Sept 2026\", modifier = Modifier.weight(1f))\n    // pendingAction = PendingAction.Support → Contact Support\n    PaymentResult(status = PaymentResultStatus.Pending, onClose = {}, onRefresh = {}, modifier = Modifier.weight(1f))\n    PaymentResult(status = PaymentResultStatus.Failed, onBack = {}, onRetry = {}, onContactSupport = {}, modifier = Modifier.weight(1f))\n}",
+    "Payment processing": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    ProcessingStrip() // under a chat header\n    ProcessingStrip(variant = ProcessingStripVariant.Card) // under the home toggle\n    ProcessingStrip(variant = ProcessingStripVariant.Toast, modifier = Modifier.padding(horizontal = 12.dp)) // above the disabled paywall CTA\n}",
+    "Sheet paywall": "var applied by remember { mutableStateOf(false) }\n// Over a screen: draw it last in a full-size Box (onScrim → the exit offer). Docs: inline = true.\nPaywallSheet(\n    applied = applied,\n    onApply = { applied = true },\n    onSupport = { /* HelpFaqSheet */ },\n    onScrim = { /* ExitOfferDialog */ },\n    onUnlock = { /* pay */ },\n    inline = true,\n)",
+    "Exit offer and offer strip": "Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    // In a chat: dismissLabel = \"Leave\", claimLabel = \"Keep 25% Off\"\n    ExitOfferDialog(onDismiss = {}, onClaim = {}, inline = true, modifier = Modifier.padding(horizontal = 16.dp))\n    OfferStrip(onClick = { /* reopen the sheet with EQUAL25 applied */ })\n}",
+    "Home cards": "Column {\n    HomeNoticeCard(\n        lead = { EmojiGlyph(emoji = \"👑\", size = 14.dp) },\n        title = \"Your Plan Expired\",\n        subtitle = \"Renew to get Unlimited access back\",\n        cta = \"Renew Now\",\n        onCta = { /* renew */ },\n    )\n    UsageCapCard(left = 7, limit = 30, resets = \"Mon\", onUpgrade = { /* open the paywall */ })\n}",
+    "Equal AI notice": "AssistantNoticeCard(\n    title = \"Your Plan Expired\",\n    body = \"Renew to unlock unlimited recordings, call summaries, transcripts, and unlimited call screening.\",\n    cta = \"Renew Equal AI Unlimited\",\n    onCta = { /* open the paywall */ },\n)",
+    "Locked recording and actions": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    LockedRecording(onUnlock = { /* open the paywall */ })\n    SummaryActions(\n        actions = listOf(SummaryAction(\"Call Back\", EqualIcons.CallFilled), SummaryAction(\"Add to Calendar\", EqualIcons.CalendarMonth)),\n        locked = true,\n        onLocked = { /* open the paywall */ },\n    )\n    // ChatListItem(lockedActions = true) draws its chips like this\n    SmallActionChip(label = \"Call Back\", emoji = \"📞\", onClick = {}, locked = true)\n}"
+  },
+  "payment-status": {
+    "Waiting for Confirmation": "PaymentStatusSheet(status = PaymentStatus.Waiting, inline = true)",
+    "Payment Confirmed": "PaymentStatusSheet(status = PaymentStatus.Confirmed, onRedirect = { /* go home */ }, inline = true)",
+    "Payment Pending": "PaymentStatusSheet(status = PaymentStatus.Pending, onContactSupport = { /* open HelpCenterSheet */ }, inline = true)",
+    "Payment Failed": "PaymentStatusSheet(status = PaymentStatus.Failed, onRetry = { /* retry payment */ }, inline = true)",
+    "Congratulations": "PaymentStatusSheet(status = PaymentStatus.Welcome, onRedirect = { /* go home */ }, inline = true)"
+  },
+  "paywall": {
+    "Hero with price and preview": "PaywallHero(onBack = {}, onSupport = { /* open HelpCenterSheet */ }) {\n    PriceTag(price = \"249\")\n    LockedPreviewCard {\n        Column {\n            ChatListItem(name = \"HDFC RM\", preview = \"Loan pre-approval request\", date = \"1:00 PM\",\n                category = EqualCategory.GateAlert)\n            EqualDivider()\n            ChatListItem(name = \"Vijay NoBroker\", preview = \"About miniature painting\", date = \"Yesterday\",\n                category = EqualCategory.RealEstate, locked = true)\n        }\n    }\n}",
+    "Preview by touchpoint": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    // Chat list\n    LockedPreviewCard {\n        ChatListItem(name = \"Vijay NoBroker\", preview = \"About miniature painting\", date = \"Yesterday\",\n            category = EqualCategory.RealEstate, locked = true)\n    }\n    // Chat\n    LockedPreviewCard {\n        Column(Modifier.padding(horizontal = 4.dp, vertical = 12.dp)) {\n            ChatBubble(type = ChatBubbleType.Outgoing, timestamp = \"03:21\", message = \"Hello, who is this?\")\n            ChatBubble(type = ChatBubbleType.Incoming, incomingCategory = EqualCategory.RealEstate,\n                timestamp = \"03:21\", message = \"Vijay from no broker\", modifier = Modifier.padding(top = 12.dp))\n            ChatBubble(type = ChatBubbleType.Incoming, incomingCategory = EqualCategory.RealEstate,\n                isFirstInGroup = false, timestamp = \"03:21\", locked = true, modifier = Modifier.padding(top = 4.dp),\n                message = \"Hey this is vijay calling from magicbrick a property advisor\")\n        }\n    }\n    // Audio\n    LockedPreviewCard {\n        CallSummaryBubble(\n            summary = \"Hey Keshav! Here is the summary of your call.\",\n            timestamp = \"03:21\",\n            locked = CallSummaryLock.Audio,\n            onUnlock = { /* open paywall */ },\n            voiceNote = {\n                VoiceNotePlayer(isPlaying = false, onPlayPauseClick = {}, progress = 0f, elapsed = \"0:00\",\n                    total = \"2:37\", speed = PlaybackSpeed.X1, onSpeedChange = {})\n            },\n            modifier = Modifier.padding(4.dp),\n        )\n    }\n}",
+    "Animated crown": "// Turntable sway (4.8s loop); static when animations are off. Stands in for the crown video.\nAnimatedCrown(size = 64.dp)",
+    "Sticky footer": "PaywallFooter(\n    onClick = { /* start payment */ },\n    cta = \"Unlock Unlimited\",\n    note = \"Cancel Anytime. Automatically renews\",\n)"
+  },
+  "plan-banner": {
+    "Under the plan card": "Column {\n    PlanCard(onManageClick = { /* reactivate */ }, manageLabel = \"Reactivate plan\")\n    PlanBanner(text = \"Reactivate your current Plan to use Equal Unlimited\", attached = true)\n}",
+    "At the top of a chat": "PlanBanner(text = \"Reactivate your current Plan to keep using Equal Unlimited\", onClick = { /* reactivate */ })"
+  },
+  "plan-card": {
+    "Current and expired": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    PlanCard(onManageClick = {})\n    // Compose: status=\"expired\" is a Boolean flag\n    PlanCard(expired = true, onManageClick = {})\n}",
+    "Custom tier": "PlanCard(tier = \"LITE\", price = \"₹49/Monthly\")"
+  },
+  "plan-expiry-banner": {
+    "States": "Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {\n    PlanExpiryBanner(expiry = PlanExpiry.Expiring(days = 2), onRenew = { /* open PaywallScreen */ })\n    PlanExpiryBanner(expiry = PlanExpiry.Today, onRenew = { /* open PaywallScreen */ })\n    PlanExpiryBanner(expiry = PlanExpiry.Expired(date = \"30th July\"), onRenew = { /* open PaywallScreen */ })\n}"
+  },
+  "profile-hero": {
+    "You tab hero with plan card": "ProfileHero(name = \"Keshav\", phone = \"+91 98789 56749\", onEdit = {}) {\n    PlanCard(onManageClick = {})\n}",
+    "Female avatar, no plan": "ProfileHero(\n    name = \"Priya Sharma\",\n    phone = \"+91 99100 22114\",\n    avatar = ProfileAvatarVariant.Female,\n    plan = null,\n    onEdit = {},\n)",
+    "Compact header": "ProfileHeader(name = \"Keshav\", phone = \"+91 98789 56749\")"
+  },
+  "screens": {
+    "home": "EqualTheme {\n    HomeScreenSample()\n}",
+    "live": "EqualTheme {\n    // Compose: ChatScreenSample renders the live-call thread; the after-call variant is a web-only sample\n    ChatScreenSample()\n}",
+    "after": "EqualTheme {\n    // Compose: same sample as the live call; compose the after-call thread from ChatHeader + MessageList\n    ChatScreenSample()\n}",
+    "you": "EqualTheme {\n    YouScreenSample(summary = AiSummaryStatus.Ready)\n}",
+    "you-loading": "EqualTheme {\n    YouScreenSample(summary = AiSummaryStatus.Loading)\n}",
+    "you-empty": "EqualTheme {\n    YouScreenSample(summary = AiSummaryStatus.Empty, avatar = ProfileAvatarVariant.Female)\n}",
+    "contact": "EqualTheme {\n    ContactInfoScreen(name = \"Amit Nanda\", phone = \"+91 9871746113\", onBack = {})\n}",
+    "search": "EqualTheme {\n    SearchScreen(onBack = {}, onOpenChat = {})\n}"
+  },
+  "search": {
+    "Search bar": "var q by remember { mutableStateOf(\"\") }\nSearchBar(value = q, onValueChange = { q = it }, onBack = {}, autoFocus = true)",
+    "Recent searches": "var q by remember { mutableStateOf(\"\") }\nvar recent by remember {\n    mutableStateOf(\n        listOf(\n            RecentSearch(\"Amit Nanda\", EqualCategory.Career),\n            RecentSearch(\"Shankar\", EqualCategory.Ride),\n            RecentSearch(\"DSR Builder\", EqualCategory.Financial),\n        ),\n    )\n}\nColumn {\n    SearchBar(value = q, onValueChange = { q = it })\n    SearchSection(title = \"Recent searches\", onClear = { recent = emptyList() })\n    RecentSearches(items = recent, onPick = { q = it })\n}",
+    "Message results": "val q = \"Sa\"\nColumn {\n    SearchSection(title = \"Messages\")\n    MessageResult(name = \"Santosh Anna\", time = \"3:02 PM\", text = \"Caller said that they’ll call you in the evening\", query = q, onClick = {})\n    EqualDivider()\n    MessageResult(name = \"Amit Nanda\", time = \"3:02 PM\", text = \"Same address, near Gachibowli\", query = q, onClick = {})\n}",
+    "States": "Column {\n    // Compose: SearchState takes an EqualAssets illustration and a size in dp\n    SearchStateView(art = EqualAssets.IllustrationSearch, size = 170.dp, title = \"Search across your calls\", body = \"Look for names, phone numbers, categories, keywords\")\n    SearchStateView(art = EqualAssets.IllustrationNoInternet, size = 130.dp, title = \"No internet connection\", body = \"We could not connect to a stable internet. Check your connection and try again.\")\n    SearchStateView(art = EqualAssets.IllustrationNoResults, size = 150.dp, title = \"No results found\", body = \"Couldn’t find anything matching. Try a different name, number, category or keyword\")\n    LoadingDots()\n}"
+  },
+  "search-field": {
+    "Empty": "var q by remember { mutableStateOf(\"\") }\n\n// Compose: the default placeholder is \"Search\", so pass \"Search chats\".\nSearchField(value = q, onValueChange = { q = it }, placeholder = \"Search chats\")",
+    "With a query": "var q by remember { mutableStateOf(\"Amit\") }\n\n// Compose: no built-in clear (X) button; clear by setting the value to \"\".\nSearchField(value = q, onValueChange = { q = it }, placeholder = \"Search chats\")",
+    "Filtering the chat list": "val chats = listOf(\"Arnav Raj\", \"Amit Kumar\", \"Priya Nair\")\nvar q by remember { mutableStateOf(\"\") }\nval results = chats.filter { it.contains(q, ignoreCase = true) }\n\nSearchField(value = q, onValueChange = { q = it }, placeholder = \"Search chats\")\nif (results.isEmpty()) {\n    EmptyState(title = \"No chats found\", body = \"Nothing matches \\\"$q\\\". Try a name or number.\")\n} else {\n    results.forEach { name ->\n        ChatListItem(name = name, preview = \"You have a visitor\", date = \"Yesterday\")\n    }\n}"
+  },
+  "segmented-chips": {
+    "Address label": "val labels = listOf(\"Home\", \"Work\", \"Other\")\nvar selected by remember { mutableStateOf(0) }\n\nSegmentedChips(options = labels, selectedIndex = selected, onSelectedIndexChange = { selected = it })",
+    "Any string union": "val speeds = listOf(\"Slow\", \"Normal\", \"Fast\")\nvar selected by remember { mutableStateOf(1) }\n\n// Compose: options are a List<String> addressed by index, not a typed union.\nSegmentedChips(options = speeds, selectedIndex = selected, onSelectedIndexChange = { selected = it })"
+  },
+  "settings-row": {
+    "You tab group": "SectionHeader(title = \"Your assistant\")\nRowGroup {\n    SettingsRow(\n        label = \"Instructions\",\n        description = \"Tell assistant how you'd like it to help\",\n        leadingIcon = EqualIcons.Instructions,\n        showNewBadge = true,\n        onClick = {},\n    )\n    SettingsRow(label = \"Assistant Health Check\", description = \"Check Real-Time Assistant Connectivity\", leadingIcon = EqualIcons.HealthCheck, onClick = {})\n    SettingsRow(label = \"Silent Mode\", description = \"Mute promotional calls\", leadingIcon = EqualIcons.SilentMode, onClick = {})\n    SettingsRow(label = \"Voice & Language\", description = \"How your assistant sounds\", leadingIcon = EqualIcons.VoiceLanguage, onClick = {})\n}",
+    "Toggle rows": "var mute by remember { mutableStateOf(true) }\nRowGroup {\n    ToggleRow(\n        label = \"Mute Promotional Calls\",\n        description = \"Equal AI Assistant can identify Promotional Calls and automatically mute them\",\n        descriptionWraps = true,\n        checked = mute,\n        onCheckedChange = { mute = it },\n    )\n}",
+    "Trailing variants": "RowGroup {\n    SettingsRow(label = \"Active Instructions\", description = \"3 Active\", onClick = {})\n    SettingsRow(label = \"Muted Contacts\", onClick = {}, trailing = {\n        EqualText(text = \"4\", style = EqualTheme.type.body1, color = EqualTheme.colors.textTertiary)\n    })\n    SettingsRow(label = \"Version\", description = \"2.4.0\", trailing = null) // null = no chevron\n}"
+  },
+  "social-proof": {
+    "Stat and rating": "Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    StatBlock(value = \"400k+\", label = \"People never miss a call\")\n    RatingPill(rating = 4.5f)\n}",
+    "Testimonials": "val avatar = @Composable { asset: EqualAssets -> EqualAssetImage(asset, size = 36.dp, modifier = Modifier.clip(CircleShape)) }\nTestimonialCarousel(\n    items = listOf(\n        Testimonial(\n            quote = \"As a freelancer, client calls and spam used to mix together. Now I get proper summaries.\",\n            name = \"keerthana\",\n            avatar = { avatar(EqualAssets.AvatarTestimonial1) },\n        ),\n        Testimonial(\n            quote = \"It is a very useful app for screening the unknown calls. This is a must download.\",\n            name = \"Arnav Raj\",\n            avatar = { avatar(EqualAssets.AvatarTestimonial2) },\n        ),\n        Testimonial(\n            quote = \"My parents get loan and insurance calls all day. Equal answers them, and I just read the summary.\",\n            name = \"Riya Kapoor\",\n            avatar = { avatar(EqualAssets.AvatarTestimonial3) },\n        ),\n    ),\n)"
+  },
+  "status-bar": {
+    "Default": "StatusBar()",
+    "On a white header": "Column {\n    StatusBar(time = \"9:41\", background = EqualTheme.colors.bgSurface)\n    EqualAppBar(title = \"Contact Info\", onBackClick = {}, background = EqualTheme.colors.bgSurface)\n}"
+  },
+  "switch": {
+    "Interactive": "var on by remember { mutableStateOf(true) }\n\n// Compose: no label param; set the accessible label with semantics.\nEqualSwitch(\n    checked = on,\n    onCheckedChange = { on = it },\n    modifier = Modifier.semantics { contentDescription = \"AI Assistant\" },\n)",
+    "States": "Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {\n    EqualSwitch(checked = true, onCheckedChange = {})\n    EqualSwitch(checked = false, onCheckedChange = {})\n    EqualSwitch(checked = true, onCheckedChange = {}, enabled = false)\n    EqualSwitch(checked = false, onCheckedChange = {}, enabled = false)\n}",
+    "In context": "var mute by remember { mutableStateOf(true) }\n\nRowGroup {\n    ToggleRow(\n        label = \"Mute Promotional Calls\",\n        description = \"Equal AI Assistant can identify Promotional Calls and automatically mute them\",\n        descriptionWraps = true,\n        checked = mute,\n        onCheckedChange = { mute = it },\n    )\n}"
+  },
+  "system-notification": {
+    "Back on": "// On a device, post a NotificationCompat instead; this preview is for mocks and flows\nSystemNotificationPreview(\n    title = \"Equal AI Assistant is back on\",\n    body = \"Equal AI is now handling all your unknown calls.\",\n)"
+  },
+  "system-status-card": {
+    "Unavailable": "SystemStatusCard(state = SystemStatusState.Unavailable, onNotifyClick = {})",
+    "Notify requested": "// The confirmation is not tappable, so onNotifyClick is never called in this state\nSystemStatusCard(state = SystemStatusState.Notified, onNotifyClick = {})",
+    "In the Chats header": "var on by remember { mutableStateOf(true) }\nvar notify by remember { mutableStateOf(SystemStatusState.Unavailable) }\nval down = true\nHomeHeader(\n    assistantOn = on,\n    onAssistantChange = { on = it },\n    status = if (down) {\n        { SystemStatusCard(state = notify, onNotifyClick = { notify = SystemStatusState.Notified }) }\n    } else {\n        null\n    },\n)"
+  },
+  "text-field": {
+    "Name": "var name by remember { mutableStateOf(\"Keshav\") }\n\nEqualTextField(\n    value = name,\n    onValueChange = { name = it },\n    label = \"Name\",\n    placeholder = \"Your name\",\n    helper = AnnotatedString(\"Your AI will call you 'Keshav'\"),\n)",
+    "Optional label": "var direction by remember { mutableStateOf(\"\") }\n\nEqualTextField(\n    value = direction,\n    onValueChange = { direction = it },\n    label = \"Guiding direction\",\n    optional = true,\n    placeholder = \"e.g. Near City Center Mall\",\n)",
+    "Multiline and grouped": "var line1 by remember { mutableStateOf(\"\") }\nvar line2 by remember { mutableStateOf(\"\") }\n\n// Fields that share one ADDRESS label omit `label` and pass contentDescription instead.\nEqualTextField(\n    value = line1,\n    onValueChange = { line1 = it },\n    contentDescription = \"Address line 1\",\n    placeholder = \"Flat, house no., building\",\n    multiline = true,\n)\nEqualTextField(\n    value = line2,\n    onValueChange = { line2 = it },\n    contentDescription = \"Address line 2\",\n    placeholder = \"Street, area, landmark\",\n    multiline = true,\n)",
+    "Error": "var pin by remember { mutableStateOf(\"\") }\n\nEqualTextField(\n    value = pin,\n    onValueChange = { pin = it.filter(Char::isDigit).take(6) },\n    contentDescription = \"Pincode\",\n    placeholder = \"Pincode\",\n    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),\n    tabular = true,\n    align = TextFieldAlign.Center,\n    error = if (pin.length == 6) null else \"Enter a 6-digit pincode\",\n)"
+  },
+  "top-bar": {
+    "Default": "TopBar()",
+    "Without a plan, with a trailing action": "TopBar(planLabel = null) {\n    EqualIconButton(icon = EqualIcons.Search, contentDescription = \"Search chats\", onClick = {})\n}",
+    "Logo and mark": "Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {\n    EqualLogo(height = 20.dp)\n    EqualLogo(height = 20.dp, variant = EqualLogoVariant.WORDMARK)\n    EqualMark(width = 23.dp, color = EqualTheme.colors.textAction)\n}"
+  },
+  "value-card": {
+    "Sheet": "// Overlay: fills the screen (scrim + sheet); pass inline = true to draw only the panel\nValueSheet(\n    expiry = PlanExpiry.Expiring(days = 3),\n    onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    onClose = { /* hide the sheet */ },\n)",
+    "Flush sheet (experiment)": "ValueSheet(\n    expiry = PlanExpiry.Today,\n    variant = ValueSheetVariant.Flush,\n    onRenew = { /* open PaywallScreen(cta = \"Get Equal AI Unlimited\") */ },\n    onClose = { /* hide the sheet */ },\n)",
+    "On the plan page": "Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {\n    DividerLabel(text = \"What Unlimited Saved You\")\n    ValueCard(calls = 20, title = null, perks = null, expiry = PlanExpiry.Expired(date = \"30th July\"))\n}",
+    "Quota: calls left": "// Free plan: \"6 out of 30 Calls Left\" with the gold progress bar\nQuotaCard(quota = Quota(used = 24, limit = 30, resetsInDays = 4))",
+    "Quota: limit reached": "QuotaCard(quota = Quota(used = 30, limit = 30, resetsInDays = 2))\n// in the sheet: ValueSheet(quota = Quota(used = 30, limit = 30, resetsInDays = 2), onRenew = openPaywall, onClose = close)",
+    "Expiry chips": "Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {\n    ExpiryChip(text = \"25th Jun ’26\", tone = ExpiryTone.Active)\n    ExpiryChip(text = \"03 Days\", tone = ExpiryTone.Warning)\n    ExpiryChip(text = \"Today\", tone = ExpiryTone.Danger)\n}"
+  },
+  "whats-new-card": {
+    "Default": "WhatsNewCard(\n    title = \"Language Preference\",\n    body = \"Set your preferred language and choose how your assistant sounds\",\n    buttonLabel = \"Try Voices\",\n    buttonIcon = EqualIcons.Translate,\n    onButtonClick = {},\n    onCloseClick = {},\n)",
+    "Custom badge and icon, not dismissible": "WhatsNewCard(\n    badgeText = \"Just added\",\n    title = \"Instructions\",\n    body = \"Tell your assistant how to handle deliveries, sales calls and more.\",\n    buttonLabel = \"Add instruction\",\n    buttonIcon = EqualIcons.Add,\n    onButtonClick = {},\n    onCloseClick = null, // null hides the close (X)\n)"
+  }
+}

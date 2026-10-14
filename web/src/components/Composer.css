@@ -1,0 +1,30 @@
+.eq-composer { display: flex; align-items: center; gap: 10px; width: 100%; }
+.eq-composer__input {
+  flex: 1;
+  min-width: 0;
+  height: 45px;
+  padding: 0 20px;
+  border-radius: var(--eq-radius-full);
+  background: var(--eq-bg-surface);
+  border: 1px solid var(--eq-stroke-subtle);
+  color: var(--eq-text-primary);
+  outline: none;
+  transition: border-color var(--eq-duration-base), box-shadow var(--eq-duration-base);
+}
+.eq-composer__input::placeholder { color: var(--eq-text-tertiary); }
+.eq-composer__input:focus,
+.eq-composer.is-focus .eq-composer__input { border-color: var(--eq-action-stroke-unread); box-shadow: var(--eq-shadow-focus-ring); }
+.eq-composer__send {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--eq-gradient-send-disabled);
+  transition: box-shadow var(--eq-duration-base);
+}
+.eq-composer__send svg { margin: -2px 0 0 2px; }
+.eq-composer.can-send .eq-composer__send,
+.eq-composer.is-focus .eq-composer__send { background: var(--eq-gradient-fab); box-shadow: var(--eq-shadow-fab); }

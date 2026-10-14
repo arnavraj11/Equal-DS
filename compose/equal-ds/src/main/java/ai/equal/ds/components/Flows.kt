@@ -1,0 +1,1034 @@
+package ai.equal.ds.components
+
+import ai.equal.ds.assets.EqualAssetImage
+import ai.equal.ds.assets.EqualAssets
+import ai.equal.ds.assets.rememberIsPlaceholder
+import ai.equal.ds.icons.EqualIcon
+import ai.equal.ds.icons.EqualIcons
+import ai.equal.ds.theme.EqualEasing
+import ai.equal.ds.theme.EqualShadow
+import ai.equal.ds.theme.EqualShadowLayer
+import ai.equal.ds.theme.EqualShadows
+import ai.equal.ds.theme.EqualTheme
+import ai.equal.ds.theme.eqShadow
+import ai.equal.ds.theme.toBrush
+import ai.equal.ds.tokens.EqualMotion
+import ai.equal.ds.tokens.EqualPrimitives
+import ai.equal.ds.tokens.EqualRadius
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.BlendMode
+import ai.equal.ds.R
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+
+// Components for the Profile, Addresses and Instructions flows (the flow designs).
+// Mirrors web/src/components/Flows.tsx + Flows.css.
+
+// =============================================================================================
+// Shared
+// =============================================================================================
+
+/** Card shadow used by the flow cards (web: 0 1px 2px black/4%). */
+private val FlowCardShadow = EqualShadow(listOf(EqualShadowLayer(0.dp, 1.dp, 2.dp, EqualPrimitives.black.copy(alpha = 0.04f))))
+
+/** Gender card shadow (web: 0 1px 2px black/5%). */
+private val GenderCardShadow = EqualShadow(listOf(EqualShadowLayer(0.dp, 1.dp, 2.dp, EqualPrimitives.black.copy(alpha = 0.05f))))
+
+/**
+ * Flow card surface: `bg/surface`, radius 16, padding 14 / 16. [elevated] adds the faint card
+ * shadow, otherwise a 1dp `stroke/subtle` border (Recommended, Preset). Dark mode always gets the
+ * `stroke/subtle` border.
+ */
+@Composable
+private fun Modifier.flowCard(elevated: Boolean = true): Modifier {
+    val colors = EqualTheme.colors
+    val shape = RoundedCornerShape(EqualRadius.rLg)
+    val shadow = if (elevated) Modifier.eqShadow(FlowCardShadow, shape) else Modifier
+    val bordered = !elevated || colors.isDark
+    return this
+        .then(shadow)
+        .background(colors.bgSurface, shape)
+        .then(if (bordered) Modifier.border(1.dp, colors.strokeSubtle, shape) else Modifier)
+}
+
+/** Centred 3D illustration at the top of a settings detail screen (Silent Mode, WhatsApp Updates). */
+@Composable
+fun IllustrationHeader(
+    asset: EqualAssets,
+    modifier: Modifier = Modifier,
+    size: Dp = 160.dp,
+) {
+    Box(
+        modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        EqualAssetImage(asset = asset, size = size)
+    }
+}
+
+/**
+ * More-vert button (32dp, icon 20) that opens an anchored [ContextMenu] (min width 168) in a
+ * focusable popup, 30dp below and 6dp in from the right edge. Selecting an item closes the menu
+ * first; tapping outside or Back dismisses it. The open state is ephemeral UI state kept here.
+ */
+@Composable
+fun OverflowMenu(
+    items: List<ContextMenuItem>,
+    modifier: Modifier = Modifier,
+    contentDescription: String = "More options",
+) {
+    val colors = EqualTheme.colors
+    var open by remember { mutableStateOf(false) }
+    val density = LocalDensity.current
+    val offset = with(density) { IntOffset(x = -6.dp.roundToPx(), y = 30.dp.roundToPx()) }
+    Box(modifier) {
+        Box(
+            Modifier
+                .size(32.dp)
+                .clip(CircleShape)
+                .clickable(role = Role.Button, onClickLabel = contentDescription) { open = !open },
+            contentAlignment = Alignment.Center,
+        ) {
+            EqualIcon(EqualIcons.MoreVert, contentDescription = contentDescription, tint = colors.textPrimary, size = 20.dp)
+        }
+        if (open) {
+            Popup(
+                alignment = Alignment.TopEnd,
+                offset = offset,
+                onDismissRequest = { open = false },
+                properties = PopupProperties(focusable = true),
+            ) {
+                ContextMenu(
+                    items = items.map { item ->
+                        item.copy(onClick = {
+                            open = false
+                            item.onClick()
+                        })
+                    },
+                    minWidth = 168.dp,
+                )
+            }
+        }
+    }
+}
+
+/** One wallpaper tile in dp: the pattern file is 1080 × 2250 px, i.e. 360 × 750dp at 3× (≈9.7 MB decoded; at 8% opacity 4× is indistinguishable). */
+private val WallpaperTileWidth = 360.dp
+private val WallpaperTileHeight = 750.dp
+
+/**
+ * Doodle chat wallpaper: `chat/wallpaper-bg`, then `ds_chat_pattern` (an alpha-only mask in
+ * `drawable-nodpi`) tiled at exactly 360 × 750dp in both directions and tinted
+ * `chat/wallpaper-pattern` (SrcIn). Used behind chat message lists and the setup [FullSheet].
+ */
+@Composable
+fun ChatWallpaper(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    val colors = EqualTheme.colors
+    val pattern = ImageBitmap.imageResource(R.drawable.ds_chat_pattern)
+    val tint = remember(colors.chatWallpaperPattern) { ColorFilter.tint(colors.chatWallpaperPattern, BlendMode.SrcIn) }
+    Box(
+        modifier.drawBehind {
+            drawRect(colors.chatWallpaperBg)
+            val tileW = WallpaperTileWidth.roundToPx()
+            val tileH = WallpaperTileHeight.roundToPx()
+            if (tileW <= 0 || tileH <= 0) return@drawBehind
+            val src = IntSize(pattern.width, pattern.height)
+            clipRect {
+                var y = 0
+                while (y < size.height) {
+                    var x = 0
+                    while (x < size.width) {
+                        drawImage(
+                            image = pattern,
+                            srcOffset = IntOffset.Zero,
+                            srcSize = src,
+                            dstOffset = IntOffset(x, y),
+                            dstSize = IntSize(tileW, tileH),
+                            colorFilter = tint,
+                        )
+                        x += tileW
+                    }
+                    y += tileH
+                }
+            }
+        },
+    ) {
+        content()
+    }
+}
+
+// =============================================================================================
+// Profile flow
+// =============================================================================================
+
+/** Gender options for [GenderSelector]. */
+enum class Gender { Male, Female }
+
+/**
+ * Gender picker: two cards (gap 12), 120 high, radius 16. Each has a faint ♂ / ♀ watermark
+ * (96, 5% `text/primary`, bottom-left, clipped), the label in `subheading` (12 from the top) and
+ * the bust art at the bottom centre (`avatar-male-bust` / `avatar-female-bust`, 60 × 56; a 52dp
+ * [ProfileAvatar] while those are placeholders).
+ * Selected: `gradient/gender-selected` + 2dp `button/primary` border. Unselected: `bg/surface`,
+ * 2dp transparent border (`stroke/dark` in dark mode).
+ */
+@Composable
+fun GenderSelector(
+    value: Gender,
+    onValueChange: (Gender) -> Unit,
+    modifier: Modifier = Modifier,
+    /** Free: the plain bust. Paid: the avatar on its gold background and ring. */
+    tier: PlanTier = PlanTier.Free,
+) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .selectableGroup(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        GenderCard(Gender.Male, selected = value == Gender.Male, tier = tier, onClick = { onValueChange(Gender.Male) }, modifier = Modifier.weight(1f))
+        GenderCard(Gender.Female, selected = value == Gender.Female, tier = tier, onClick = { onValueChange(Gender.Female) }, modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun GenderCard(gender: Gender, selected: Boolean, tier: PlanTier, onClick: () -> Unit, modifier: Modifier) {
+    val colors = EqualTheme.colors
+    val shape = RoundedCornerShape(EqualRadius.rLg)
+    val borderColor = when {
+        selected -> colors.buttonPrimary
+        colors.isDark -> colors.strokeDark
+        else -> Color.Transparent
+    }
+    val fill = if (selected) {
+        Modifier.background(EqualTheme.gradients.genderSelected.toBrush(), shape)
+    } else {
+        Modifier.background(colors.bgSurface, shape)
+    }
+    val bust = if (gender == Gender.Male) EqualAssets.AvatarMaleBust else EqualAssets.AvatarFemaleBust
+    val bustIsPlaceholder = rememberIsPlaceholder(bust)
+    val markSize = with(LocalDensity.current) { 96.dp.toSp() }
+    Box(
+        modifier
+            .height(120.dp)
+            .eqShadow(GenderCardShadow, shape)
+            .then(fill)
+            .border(2.dp, borderColor, shape)
+            .clip(shape)
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick),
+    ) {
+        // Decorative watermark; sized in dp (converted) so it doesn't scale with the font size.
+        BasicText(
+            text = if (gender == Gender.Male) "♂" else "♀",
+            style = TextStyle(fontSize = markSize, lineHeight = markSize, color = colors.textPrimary.copy(alpha = 0.05f)),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .offset(x = (-6).dp, y = 18.dp),
+        )
+        EqualText(
+            text = if (gender == Gender.Male) "Male" else "Female",
+            style = EqualTheme.type.subheading,
+            color = colors.textPrimary,
+            maxLines = 1,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 12.dp),
+        )
+        Box(Modifier.align(Alignment.BottomCenter)) {
+            if (tier == PlanTier.Paid || bustIsPlaceholder) {
+                ProfileAvatar(
+                    variant = if (gender == Gender.Male) ProfileAvatarVariant.Male else ProfileAvatarVariant.Female,
+                    width = 52.dp,
+                    tier = PlanTier.Paid,
+                    contentDescription = null,
+                )
+            } else {
+                EqualAssetImage(asset = bust, size = DpSize(60.dp, 56.dp))
+            }
+        }
+    }
+}
+
+// =============================================================================================
+// Addresses flow
+// =============================================================================================
+
+/** A saved address. [line2] and [direction] are optional (blank = absent). */
+@Immutable
+data class SavedAddress(
+    val id: String,
+    val label: String,
+    val line1: String,
+    val line2: String? = null,
+    val city: String,
+    val pincode: String,
+    val direction: String? = null,
+)
+
+/** "line1, line2, City- 500032" (blank parts skipped), as on web. */
+fun formatAddress(address: SavedAddress): String =
+    listOf(address.line1, address.line2.orEmpty(), "${address.city}- ${address.pincode}")
+        .filter { it.isNotBlank() }
+        .joinToString(", ")
+
+/**
+ * Saved address card: label `subheading`, address `captionWrap` `text/secondary` (4 below), and an
+ * [OverflowMenu] with Edit / Delete address (danger) when [onEdit] / [onDelete] are set.
+ */
+@Composable
+fun AddressCard(
+    label: String,
+    address: String,
+    modifier: Modifier = Modifier,
+    onEdit: (() -> Unit)? = null,
+    onDelete: (() -> Unit)? = null,
+) {
+    val colors = EqualTheme.colors
+    Row(
+        modifier
+            .fillMaxWidth()
+            .flowCard()
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.Top,
+    ) {
+        Column(Modifier.weight(1f)) {
+            EqualText(text = label, style = EqualTheme.type.subheading, color = colors.textPrimary)
+            Spacer(Modifier.height(4.dp))
+            EqualText(text = address, style = EqualTheme.type.captionWrap, color = colors.textSecondary)
+        }
+        val items = editDeleteItems(onEdit, onDelete, deleteLabel = "Delete address")
+        if (items.isNotEmpty()) {
+            Spacer(Modifier.width(8.dp))
+            OverflowMenu(
+                items = items,
+                contentDescription = "$label options",
+                modifier = Modifier.offset(x = 8.dp, y = (-6).dp),
+            )
+        }
+    }
+}
+
+private fun editDeleteItems(onEdit: (() -> Unit)?, onDelete: (() -> Unit)?, deleteLabel: String): List<ContextMenuItem> =
+    buildList {
+        if (onEdit != null) add(ContextMenuItem("Edit", EqualIcons.Edit, onClick = onEdit))
+        if (onDelete != null) add(ContextMenuItem(deleteLabel, EqualIcons.Delete, onClick = onDelete, destructive = true))
+    }
+
+private val AddressLabels = listOf("Home", "Work", "Other")
+private val SixDigits = Regex("^\\d{6}$")
+
+/**
+ * Add / edit address form: LABEL* chips (Home / Work / Other) → ADDRESS: two multiline fields,
+ * then City + Pincode (centred; pincode digits only, max 6, error unless 6) → optional Guiding
+ * direction → Save (block, lg), enabled once line 1, city and a valid pincode are filled.
+ *
+ * The form keeps its own draft state, seeded from [initial] (key it by the address being edited).
+ * [onSave] gets the draft with `initial.id` (empty for a new address; the caller assigns one).
+ */
+@Composable
+fun AddressForm(
+    onSave: (SavedAddress) -> Unit,
+    modifier: Modifier = Modifier,
+    initial: SavedAddress? = null,
+) {
+    val colors = EqualTheme.colors
+    val type = EqualTheme.type
+    val initialLabel = when {
+        initial == null -> "Home"
+        initial.label in AddressLabels -> initial.label
+        else -> "Other"
+    }
+    var labelIndex by remember { mutableIntStateOf(AddressLabels.indexOf(initialLabel)) }
+    var line1 by remember { mutableStateOf(initial?.line1.orEmpty()) }
+    var line2 by remember { mutableStateOf(initial?.line2.orEmpty()) }
+    var city by remember { mutableStateOf(initial?.city.orEmpty()) }
+    var pincode by remember { mutableStateOf(initial?.pincode.orEmpty()) }
+    var direction by remember { mutableStateOf(initial?.direction.orEmpty()) }
+    val pinValid = SixDigits.matches(pincode)
+    val pinError = if (pincode.isNotEmpty() && !pinValid) "Enter a 6-digit pincode" else null
+    val canSave = line1.isNotBlank() && city.isNotBlank() && pinValid
+
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        Column {
+            EqualText(text = "LABEL*", style = type.overline, color = colors.textTertiary)
+            Spacer(Modifier.height(10.dp))
+            SegmentedChips(options = AddressLabels, selectedIndex = labelIndex, onSelectedIndexChange = { labelIndex = it })
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            EqualText(text = "ADDRESS", style = type.overline, color = colors.textTertiary)
+            EqualTextField(
+                value = line1,
+                onValueChange = { line1 = it },
+                placeholder = "Flat, house no., building",
+                multiline = true,
+                contentDescription = "Address line 1",
+            )
+            EqualTextField(
+                value = line2,
+                onValueChange = { line2 = it },
+                placeholder = "Street, area, landmark",
+                multiline = true,
+                contentDescription = "Address line 2",
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+                EqualTextField(
+                    value = city,
+                    onValueChange = { city = it },
+                    placeholder = "City",
+                    align = TextFieldAlign.Center,
+                    contentDescription = "City",
+                    modifier = Modifier.weight(1f),
+                )
+                EqualTextField(
+                    value = pincode,
+                    onValueChange = { v -> pincode = v.filter { it.isDigit() }.take(6) },
+                    placeholder = "Pincode",
+                    align = TextFieldAlign.Center,
+                    tabular = true,
+                    error = pinError,
+                    contentDescription = "Pincode",
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+        EqualTextField(
+            value = direction,
+            onValueChange = { direction = it },
+            label = "Guiding direction",
+            optional = true,
+            placeholder = "e.g. Near City Center Mall",
+        )
+        EqualButton(
+            text = "Save",
+            onClick = {
+                if (canSave) {
+                    onSave(
+                        SavedAddress(
+                            id = initial?.id.orEmpty(),
+                            label = AddressLabels[labelIndex],
+                            line1 = line1,
+                            line2 = line2.ifBlank { null },
+                            city = city,
+                            pincode = pincode,
+                            direction = direction.ifBlank { null },
+                        ),
+                    )
+                }
+            },
+            size = EqualButtonSize.Block,
+            enabled = canSave,
+        )
+    }
+}
+
+// =============================================================================================
+// Instructions flow
+// =============================================================================================
+
+/** Where an instruction came from (a preset), shown as a small chip on active instructions. */
+@Immutable
+data class InstructionSource(val emoji: String, val label: String)
+
+/**
+ * An assistant instruction. [whenText] / [doText] are the web `when` / `do` lines (Kotlin
+ * keywords). [doText] may contain `{key}` placeholders filled by the setup chat.
+ */
+@Immutable
+data class Instruction(
+    val id: String,
+    val title: String,
+    val whenText: String,
+    val doText: String,
+    val source: InstructionSource? = null,
+)
+
+/**
+ * "Recommended for you" card: 188 wide, min 114 high, bordered flow card. Emoji 26 and a 30dp
+ * `icon-button/bg` circle with add 20 `text/action` → 10 → title `subheading` → description
+ * `body1` `text/secondary`.
+ */
+@Composable
+fun RecommendedCard(
+    emoji: String,
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier,
+    onAdd: (() -> Unit)? = null,
+) {
+    val colors = EqualTheme.colors
+    Column(
+        modifier
+            .width(188.dp)
+            .defaultMinSize(minHeight = 114.dp)
+            .flowCard(elevated = false)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+    ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+            EmojiGlyph(emoji = emoji, size = 26.dp)
+            Spacer(Modifier.weight(1f))
+            if (onAdd != null) {
+                Box(
+                    Modifier
+                        .size(30.dp)
+                        .clip(CircleShape)
+                        .background(colors.iconButtonBg)
+                        .clickable(role = Role.Button, onClickLabel = "Add $title", onClick = onAdd),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    EqualIcon(EqualIcons.Add, contentDescription = "Add $title", tint = colors.textAction, size = 20.dp)
+                }
+            }
+        }
+        Spacer(Modifier.height(10.dp))
+        EqualText(text = title, style = EqualTheme.type.subheading, color = colors.textPrimary)
+        EqualText(text = description, style = EqualTheme.type.body1, color = colors.textSecondary)
+    }
+}
+
+/**
+ * Shown in place of recommendations when all are applied or none exist. Radius 16,
+ * `gradient/suggestion-card`, 1dp `stroke/subtle`, padding 16 / 12 / 12 / 16. Orb 18 + caption,
+ * 12 → `bodyLarge` line, then the 112dp `illustration-suggestions`.
+ */
+@Composable
+fun SuggestionsComingCard(
+    modifier: Modifier = Modifier,
+    label: String = "New suggestions coming…",
+    body: String = "More suggestions will show up here as I learn your calls",
+) {
+    val colors = EqualTheme.colors
+    val shape = RoundedCornerShape(EqualRadius.rLg)
+    Row(
+        modifier
+            .fillMaxWidth()
+            .background(EqualTheme.gradients.suggestionCard.toBrush(), shape)
+            .border(1.dp, colors.strokeSubtle, shape)
+            .padding(start = 16.dp, top = 16.dp, end = 12.dp, bottom = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Column(Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                EqualLogoOrb(size = 18.dp)
+                Spacer(Modifier.width(6.dp))
+                EqualText(text = label, style = EqualTheme.type.caption, color = colors.textSecondary, maxLines = 1)
+            }
+            Spacer(Modifier.height(12.dp))
+            EqualText(text = body, style = EqualTheme.type.bodyLarge, color = colors.textPrimary)
+        }
+        EqualAssetImage(asset = EqualAssets.IllustrationSuggestions, size = 112.dp)
+    }
+}
+
+/** Tint behind a [PresetCard] emoji. */
+enum class PresetTint { Red, Green, Orange }
+
+/**
+ * "Browse presets" card: bordered flow card, clickable. Emoji 16 in a 26dp tinted circle
+ * (`preset/tint-*`) + chevron 22 `text/placeholder` → 12 → title `subheading` → description
+ * `captionWrap` `text/secondary`.
+ */
+@Composable
+fun PresetCard(
+    emoji: String,
+    tint: PresetTint,
+    title: String,
+    description: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = EqualTheme.colors
+    val tintColor = when (tint) {
+        PresetTint.Red -> colors.presetTintRed
+        PresetTint.Green -> colors.presetTintGreen
+        PresetTint.Orange -> colors.presetTintOrange
+    }
+    Column(
+        modifier
+            .fillMaxWidth()
+            .flowCard(elevated = false)
+            .clip(RoundedCornerShape(EqualRadius.rLg))
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+    ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                Modifier
+                    .size(26.dp)
+                    .background(tintColor, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                EmojiGlyph(emoji = emoji, size = 16.dp)
+            }
+            Spacer(Modifier.weight(1f))
+            EqualIcon(EqualIcons.ChevronRight, contentDescription = null, tint = colors.textPlaceholder, size = 22.dp)
+        }
+        Spacer(Modifier.height(12.dp))
+        EqualText(text = title, style = EqualTheme.type.subheading, color = colors.textPrimary)
+        EqualText(text = description, style = EqualTheme.type.captionWrap, color = colors.textSecondary)
+    }
+}
+
+/** Which line of an instruction a [WhenDoRow] shows. */
+enum class WhenDoKind { When, Do }
+
+/**
+ * When / Do line of an instruction. Presets: a flat pill (min 42 wide, 26 high, h10; When
+ * `chip/when-bg`, Do `chip/do-bg`) with a sentence-case `caption` Regular label → 12 → `body1`.
+ * Active instructions ([upper]): a 51 × 24 pill fading from `gradient/when-chip` / `gradient/do-chip`
+ * to transparent, WHEN / DO 13sp medium caps `text/secondary` → 8 → text 13/18 `text/primary`.
+ */
+@Composable
+fun WhenDoRow(
+    kind: WhenDoKind,
+    text: AnnotatedString,
+    modifier: Modifier = Modifier,
+    upper: Boolean = false,
+) {
+    val colors = EqualTheme.colors
+    val type = EqualTheme.type
+    val label = if (kind == WhenDoKind.When) "When" else "Do"
+    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
+        if (upper) {
+            val gradient = if (kind == WhenDoKind.When) EqualTheme.gradients.whenChip else EqualTheme.gradients.doChip
+            Box(
+                Modifier
+                    .offset(y = (-3).dp)
+                    .size(width = 51.dp, height = 24.dp)
+                    .background(gradient.toBrush(), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                EqualText(
+                    text = label.uppercase(),
+                    style = type.caption.copy(fontSize = 13.sp, lineHeight = 16.sp, letterSpacing = 0.26.sp),
+                    color = colors.textSecondary,
+                    maxLines = 1,
+                )
+            }
+            Spacer(Modifier.width(8.dp))
+            BasicText(
+                text = text,
+                style = type.body1.copy(color = colors.textPrimary, fontSize = 13.sp, lineHeight = 18.sp),
+                modifier = Modifier.weight(1f),
+            )
+        } else {
+            Box(
+                Modifier
+                    .height(26.dp)
+                    .widthIn(min = 42.dp)
+                    .background(if (kind == WhenDoKind.When) colors.chipWhenBg else colors.chipDoBg, CircleShape)
+                    .padding(horizontal = 10.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                EqualText(text = label, style = type.captionRegular, color = colors.textTertiary, maxLines = 1)
+            }
+            Spacer(Modifier.width(12.dp))
+            BasicText(text = text, style = type.body1.copy(color = colors.textPrimary), modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+/** Plain-text [WhenDoRow]. */
+@Composable
+fun WhenDoRow(
+    kind: WhenDoKind,
+    text: String,
+    modifier: Modifier = Modifier,
+    upper: Boolean = false,
+) {
+    WhenDoRow(kind = kind, text = AnnotatedString(text), modifier = modifier, upper = upper)
+}
+
+/**
+ * Preset instruction (preset detail screen): title `subheading` with an Apply `sm` button (add
+ * icon), or an "Applied" pill (24 high, `action-card/highlight`, check 16 + `buttonSmall`
+ * `text/action`) once [applied] → When / Do rows (gap 14).
+ */
+@Composable
+fun PresetInstructionCard(
+    instruction: Instruction,
+    applied: Boolean,
+    onApply: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = EqualTheme.colors
+    Column(
+        modifier
+            .fillMaxWidth()
+            .flowCard()
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Row(verticalAlignment = Alignment.Top) {
+            EqualText(
+                text = instruction.title,
+                style = EqualTheme.type.subheading,
+                color = colors.textPrimary,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(top = 12.dp),
+            )
+            Spacer(Modifier.width(12.dp))
+            if (applied) {
+                Row(
+                    Modifier
+                        .padding(top = 12.dp)
+                        .height(24.dp)
+                        .background(colors.actionCardHighlight, CircleShape)
+                        .padding(horizontal = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    EqualIcon(EqualIcons.Check, contentDescription = null, tint = colors.textAction, size = 16.dp)
+                    Spacer(Modifier.width(4.dp))
+                    EqualText(text = "Applied", style = EqualTheme.type.buttonSmall, color = colors.textAction, maxLines = 1)
+                }
+            } else {
+                EqualButton(text = "Apply", onClick = onApply, size = EqualButtonSize.Sm, leadingIcon = EqualIcons.Add)
+            }
+        }
+        WhenDoRow(kind = WhenDoKind.When, text = instruction.whenText)
+        WhenDoRow(kind = WhenDoKind.Do, text = instruction.doText)
+    }
+}
+
+/**
+ * Active instruction (Instructions screenshot, 328dp card): `bg/surface`, 1dp `stroke/subtle`
+ * outline, radius 16, padding 17. Header: title 17/20 Bold + [OverflowMenu] (Edit / Delete
+ * instruction); then the outlined source pill (24 high, h 8/10, emoji 14 + `caption`
+ * `text/secondary`); a full-width divider (9 above, 17 below); then the WHEN and DO rows (gap 14).
+ */
+@Composable
+fun InstructionCard(
+    instruction: Instruction,
+    modifier: Modifier = Modifier,
+    onEdit: (() -> Unit)? = null,
+    onDelete: (() -> Unit)? = null,
+) {
+    val colors = EqualTheme.colors
+    val shape = RoundedCornerShape(EqualRadius.rLg)
+    Column(
+        modifier
+            .fillMaxWidth()
+            .background(colors.bgSurface, shape)
+            .border(1.dp, colors.strokeSubtle, shape)
+            .padding(17.dp),
+    ) {
+        Row(verticalAlignment = Alignment.Top) {
+            EqualText(
+                text = instruction.title,
+                style = EqualTheme.type.subheading.copy(fontSize = 17.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold),
+                color = colors.textPrimary,
+                modifier = Modifier.weight(1f).padding(top = 2.dp),
+            )
+            val items = editDeleteItems(onEdit, onDelete, deleteLabel = "Delete instruction")
+            if (items.isNotEmpty()) {
+                Spacer(Modifier.width(8.dp))
+                OverflowMenu(
+                    items = items,
+                    contentDescription = "Instruction options",
+                    modifier = Modifier.offset(x = 12.dp, y = (-8).dp),
+                )
+            }
+        }
+        val source = instruction.source
+        if (source != null) {
+            Spacer(Modifier.height(8.dp))
+            Row(
+                Modifier
+                    .height(24.dp)
+                    .border(1.dp, colors.strokeSubtle, CircleShape)
+                    .padding(start = 8.dp, end = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                EmojiGlyph(emoji = source.emoji, size = 12.dp)
+                Spacer(Modifier.width(6.dp))
+                EqualText(text = source.label, style = EqualTheme.type.caption, color = colors.textSecondary, maxLines = 1)
+            }
+        }
+        Spacer(Modifier.height(9.dp))
+        EqualDivider()
+        Spacer(Modifier.height(17.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            WhenDoRow(kind = WhenDoKind.When, text = instruction.whenText, upper = true)
+            WhenDoRow(kind = WhenDoKind.Do, text = instruction.doText, upper = true)
+        }
+    }
+}
+
+/**
+ * Instruction preview inside the setup chat: the shared [ActionCardBody] (note_stack icon on a
+ * white circle, title, "When: …" `text/primary`, "Do: …" `text/secondary`, time) in the action
+ * card's white frame (radius 16, padding 8, max width 280). [confirmed] adds a ✅ reaction badge
+ * (32 circle, shadow `raised`) overlapping the bottom-left; leave 16dp below the preview for it.
+ */
+@Composable
+fun InstructionPreview(
+    title: String,
+    whenText: AnnotatedString,
+    action: AnnotatedString,
+    modifier: Modifier = Modifier,
+    time: String? = null,
+    confirmed: Boolean = false,
+) {
+    val colors = EqualTheme.colors
+    Box(modifier) {
+        Box(
+            Modifier
+                .widthIn(max = 280.dp)
+                .background(colors.bgSurface, RoundedCornerShape(EqualRadius.rLg))
+                .padding(8.dp),
+        ) {
+            ActionCardBody(
+                title = title,
+                icon = EqualIcons.Instructions,
+                lines = instructionLines(whenText, action),
+                timestamp = time,
+            )
+        }
+        if (confirmed) {
+            Box(
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .offset(x = 12.dp, y = 16.dp)
+                    .size(32.dp)
+                    .eqShadow(EqualShadows.raised, CircleShape)
+                    .background(colors.bgSurface, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                EmojiGlyph(emoji = "✅", size = 18.dp)
+            }
+        }
+    }
+}
+
+/**
+ * Full-height sheet (the "Setting up instruction" chat). Scrim `scrim`; the panel starts 72 from
+ * the top with radius 24 and `bg/surface`. Header (padding 14 / 14 / 14 / 16, gap 10, 1dp
+ * `stroke/subtle` below): orb 32 + [title] `subheading` + neutral close. The body is a
+ * [ChatWallpaper]: scrolling [content] ([scrollState], hoist it to auto-scroll) and an optional
+ * [footer] (padding 8 / 16 / 16, plus the navigation-bar inset). Place it last in a full-screen Box.
+ */
+@Composable
+fun FullSheet(
+    visible: Boolean,
+    onDismissRequest: () -> Unit,
+    title: String,
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState(),
+    footer: (@Composable ColumnScope.() -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val colors = EqualTheme.colors
+    Box(Modifier.fillMaxSize()) {
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn(tween(EqualMotion.slow)),
+            exit = fadeOut(tween(EqualMotion.slow)),
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(colors.scrim)
+                    .clickable(
+                        interactionSource = rememberInteraction(),
+                        indication = null,
+                        onClickLabel = "Dismiss",
+                        role = Role.Button,
+                        onClick = onDismissRequest,
+                    ),
+            )
+        }
+        AnimatedVisibility(
+            visible = visible,
+            modifier = Modifier.fillMaxSize(),
+            enter = slideInVertically(tween(EqualMotion.slow, easing = EqualEasing.standard)) { it },
+            exit = slideOutVertically(tween(EqualMotion.slow, easing = EqualEasing.standard)) { it },
+        ) {
+            val shape = RoundedCornerShape(topStart = EqualRadius.r2xl, topEnd = EqualRadius.r2xl)
+            Column(
+                modifier
+                    .fillMaxSize()
+                    .padding(top = 72.dp)
+                    .clip(shape)
+                    .background(colors.bgSurface)
+                    .pointerInput(Unit) { detectTapGestures { } },
+            ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, top = 14.dp, end = 14.dp, bottom = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    EqualLogoOrb(size = 32.dp)
+                    Spacer(Modifier.width(10.dp))
+                    EqualText(
+                        text = title,
+                        style = EqualTheme.type.subheading,
+                        color = colors.textPrimary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    EqualIconButton(
+                        icon = EqualIcons.Close,
+                        contentDescription = "Close",
+                        onClick = onDismissRequest,
+                        variant = EqualIconButtonVariant.Neutral,
+                        iconSize = 22.dp,
+                    )
+                }
+                EqualDivider()
+                ChatWallpaper(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                ) {
+                    Column(Modifier.fillMaxSize()) {
+                        Column(
+                            Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .verticalScroll(scrollState),
+                            content = content,
+                        )
+                        if (footer != null) {
+                            Column(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .navigationBarsPadding()
+                                    .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
+                                content = footer,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// =============================================================================================
+// Previews
+// =============================================================================================
+
+private val PreviewInstruction = Instruction(
+    id = "decline-sales",
+    title = "Decline sales, promo spam calls",
+    whenText = "The caller is selling loan, insurance, credit card, product, or another unsolicited offer",
+    doText = "Politely say I am not interested and end the conversation without discussing the offer",
+    source = InstructionSource("🛡️", "Screen & Protect"),
+)
+
+@EqualPreviews
+@Composable
+private fun FlowCardsPreview() {
+    PreviewFrame {
+        var gender by remember { mutableStateOf(Gender.Male) }
+        GenderSelector(value = gender, onValueChange = { gender = it })
+        VSpace(12.dp)
+        AddressCard(label = "Home", address = "House no. 4, Tony Street, Financial District, Hyderabad- 500032", onEdit = {}, onDelete = {})
+        VSpace(12.dp)
+        InstructionCard(instruction = PreviewInstruction, onEdit = {}, onDelete = {})
+        VSpace(12.dp)
+        PresetInstructionCard(instruction = PreviewInstruction, applied = false, onApply = {})
+        VSpace(12.dp)
+        PresetCard(emoji = "🛡️", tint = PresetTint.Red, title = "Screen & Protect", description = "Decline spam, hold the line on loan and payments call, close wrong call", onClick = {})
+        VSpace(12.dp)
+        RecommendedCard(emoji = "🚫", title = "Decline sales & spam", description = "Politely declines sales and insurance calls.", onAdd = {})
+        VSpace(12.dp)
+        SuggestionsComingCard()
+        VSpace(12.dp)
+        InstructionPreview(
+            title = PreviewInstruction.title,
+            whenText = AnnotatedString(PreviewInstruction.whenText),
+            action = AnnotatedString(PreviewInstruction.doText),
+            time = "03:21",
+            confirmed = true,
+        )
+        VSpace(24.dp)
+    }
+}
+
+@EqualPreviews
+@Composable
+private fun AddressFormPreview() {
+    PreviewFrame {
+        AddressForm(onSave = {})
+    }
+}

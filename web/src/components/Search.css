@@ -1,0 +1,26 @@
+/* Search (Search design). */
+.eq-searchbar { display: flex; align-items: center; gap: 4px; height: 52px; margin: 8px 16px; padding: 0 8px 0 4px; border-radius: 999px; border: 1.5px solid var(--eq-button-primary); background: var(--eq-bg-surface); }
+.eq-searchbar__back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--eq-text-primary); flex-shrink: 0; }
+.eq-searchbar input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; color: var(--eq-text-primary); padding: 0; caret-color: var(--eq-text-action); }
+.eq-searchbar input::placeholder { color: var(--eq-text-tertiary); }
+.eq-searchbar__clear { display: inline-flex; color: var(--eq-text-tertiary); padding: 6px; }
+
+.eq-search-section { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 8px; }
+.eq-search-section__clear { padding: 4px 12px; border-radius: 999px; background: var(--eq-bg-surface); color: var(--eq-text-primary); }
+
+.eq-recent { display: flex; gap: 14px; padding: 4px 16px 8px; overflow-x: auto; scrollbar-width: none; }
+.eq-recent__item { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 72px; color: var(--eq-text-primary); flex-shrink: 0; }
+
+.eq-highlight { font-weight: 700; color: var(--eq-text-primary); }
+.eq-message-result { display: flex; flex-direction: column; gap: 2px; width: 100%; padding: 10px 16px; text-align: left; color: var(--eq-text-primary); }
+.eq-message-result + .eq-message-result { border-top: 1px solid var(--eq-stroke-subtle); }
+.eq-message-result__top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+
+.eq-loading-dots { display: flex; justify-content: center; gap: 8px; padding: 24px 0; }
+.eq-loading-dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--eq-button-primary); animation: eq-dot-pulse 1s ease-in-out infinite; }
+.eq-loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+.eq-loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes eq-dot-pulse { 0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); } 40% { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .eq-loading-dots span { animation: none; opacity: 1; } }
+
+.eq-search-state { display: flex; flex-direction: column; align-items: center; padding: 48px 28px 24px; }

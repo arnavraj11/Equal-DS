@@ -1,0 +1,328 @@
+// Components for the Profile, Addresses and Instructions flows (the flow designs).
+import { ActionCardBody, instructionLines } from './ActionCard';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { Asset, hasAsset, type AssetName } from '../foundations/Asset';
+import patternUrl from '../foundations/chat-pattern@3x.webp';
+import { Emoji, Icon } from '../foundations/Icon';
+import { Text } from '../foundations/Text';
+import { AiAvatar, ProfileAvatar, type PlanTier } from './Avatar';
+import { Button, IconButton } from './Button';
+import { ContextMenu, type MenuItem } from './ContextMenu';
+import { SegmentedChips, TextField } from './Inputs';
+import './Flows.css';
+
+// ================================================================ shared
+
+/** Centred 3D illustration at the top of a settings detail screen (Silent Mode, WhatsApp Updates). */
+export function IllustrationHeader({ asset, size = 160 }: { asset: AssetName; size?: number }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 16px' }}>
+      <Asset name={asset} size={size} />
+    </div>
+  );
+}
+
+/** More-vert button that opens an anchored ContextMenu. Closes on outside click / Escape. */
+export function OverflowMenu({ items, label = 'More options' }: { items: MenuItem[]; label?: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+  return (
+    <div ref={ref} style={{ position: 'relative', zIndex: open ? 30 : undefined }}>
+      <IconButton icon="more-vert" label={label} size={32} iconSize={20} onClick={() => setOpen((o) => !o)} aria-expanded={open} />
+      {open && (
+        <div className="eq-overflow">
+          <ContextMenu items={items.map((it) => ({ ...it, onSelect: () => (setOpen(false), it.onSelect?.()) }))} minWidth={168} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Doodle chat wallpaper — BG pattern.svg, used as an alpha mask (360 × 750 tile) and tinted with
+ * `chat/wallpaper-pattern` (#737373 @ 8%) over `chat/wallpaper-bg`, so one pattern serves light and dark.
+ */
+export function ChatWallpaper({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+  return (
+    <div className="eq-wallpaper" style={{ ['--eq-pattern-url' as string]: `url(${patternUrl})`, ...style }}>
+      {children}
+    </div>
+  );
+}
+
+// ================================================================ Profile flow
+
+export type Gender = 'male' | 'female';
+
+/**
+ * Gender picker: two cards with a faint ♂ / ♀ watermark and the avatar. Selected: green outline +
+ * fill. `tier`: free shows the plain bust; paid shows the avatar on its gold background and ring.
+ */
+export function GenderSelector({ value, onChange, tier = 'free' }: { value: Gender; onChange?: (g: Gender) => void; tier?: PlanTier }) {
+  return (
+    <div role="radiogroup" aria-label="Gender" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      {(['male', 'female'] as const).map((g) => {
+        const bust = g === 'male' ? 'avatar-male-bust' : 'avatar-female-bust';
+        return (
+          <button key={g} type="button" role="radio" aria-checked={value === g} className={`eq-reset-btn eq-pressable eq-gender ${value === g ? 'is-on' : ''}`} onClick={() => onChange?.(g)}>
+            <span className="eq-gender__mark" aria-hidden>{g === 'male' ? '♂' : '♀'}</span>
+            <Text variant="subheading" style={{ position: 'relative' }}>{g === 'male' ? 'Male' : 'Female'}</Text>
+            <span className="eq-gender__art">
+              {tier === 'paid' ? <ProfileAvatar variant={g} size={52} tier="paid" /> : hasAsset(bust) ? <Asset name={bust} width={60} height={56} /> : <ProfileAvatar variant={g} size={52} />}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ================================================================ Addresses flow
+
+export type SavedAddress = { id: string; label: string; line1: string; line2?: string; city: string; pincode: string; direction?: string };
+
+export const formatAddress = (a: SavedAddress) => [a.line1, a.line2, `${a.city}- ${a.pincode}`].filter(Boolean).join(', ');
+
+/** Saved address card — label (subheading), address (caption Regular, wraps), overflow menu Edit / Delete. */
+export function AddressCard({ label, address, onEdit, onDelete }: { label: string; address: string; onEdit?: () => void; onDelete?: () => void }) {
+  return (
+    <div className="eq-flow-card" style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <Text as="div" variant="subheading">{label}</Text>
+        <Text as="p" variant="captionWrap" color="secondary" style={{ marginTop: 4 }}>{address}</Text>
+      </div>
+      {(onEdit || onDelete) && (
+        <div style={{ margin: '-6px -8px 0 0' }}>
+          <OverflowMenu
+            label={`${label} options`}
+            items={[
+              ...(onEdit ? [{ label: 'Edit', icon: 'edit' as const, onSelect: onEdit }] : []),
+              ...(onDelete ? [{ label: 'Delete address', icon: 'delete' as const, danger: true, onSelect: onDelete }] : []),
+            ]}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+const LABELS = ['Home', 'Work', 'Other'] as const;
+
+/** Edit / add address form — label chips, two address lines, city + pincode, optional guiding direction, Save. */
+export function AddressForm({ initial, onSave }: { initial?: Partial<SavedAddress>; onSave?: (a: Omit<SavedAddress, 'id'>) => void }) {
+  const [label, setLabel] = useState<(typeof LABELS)[number]>(((LABELS as readonly string[]).includes(initial?.label ?? '') ? initial?.label : initial?.label ? 'Other' : 'Home') as (typeof LABELS)[number]);
+  const [line1, setLine1] = useState(initial?.line1 ?? '');
+  const [line2, setLine2] = useState(initial?.line2 ?? '');
+  const [city, setCity] = useState(initial?.city ?? '');
+  const [pincode, setPincode] = useState(initial?.pincode ?? '');
+  const [direction, setDirection] = useState(initial?.direction ?? '');
+  const pinError = pincode && !/^\d{6}$/.test(pincode) ? 'Enter a 6-digit pincode' : undefined;
+  const canSave = line1.trim() && city.trim() && /^\d{6}$/.test(pincode);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div>
+        <Text as="div" variant="overline" color="tertiary" style={{ marginBottom: 10 }}>LABEL*</Text>
+        <SegmentedChips options={LABELS} value={label} onChange={setLabel} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <Text as="div" variant="overline" color="tertiary">ADDRESS</Text>
+        <TextField aria-label="Address line 1" placeholder="Flat, house no., building" value={line1} onChange={setLine1} multiline />
+        <TextField aria-label="Address line 2" placeholder="Street, area, landmark" value={line2} onChange={setLine2} multiline />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <TextField aria-label="City" placeholder="City" value={city} onChange={setCity} align="center" />
+          <TextField aria-label="Pincode" placeholder="Pincode" value={pincode} onChange={(v) => setPincode(v.replace(/\D/g, '').slice(0, 6))} align="center" inputMode="numeric" className="eq-tnum" error={pinError} />
+        </div>
+      </div>
+      <TextField label="Guiding direction" optional value={direction} onChange={setDirection} placeholder="e.g. Near City Center Mall" />
+      <Button block size="lg" disabled={!canSave} onClick={() => canSave && onSave?.({ label, line1, line2, city, pincode, direction })}>Save</Button>
+    </div>
+  );
+}
+
+// ================================================================ Instructions flow
+
+/** Horizontal "Recommended for you" card — emoji, + add, title, description. */
+export function RecommendedCard({ emoji, title, description, onAdd }: { emoji: string; title: string; description: string; onAdd?: () => void }) {
+  return (
+    <div className="eq-flow-card eq-rec">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <Emoji char={emoji} size={26} />
+        {onAdd && (
+          <button type="button" className="eq-reset-btn eq-pressable eq-touch eq-rec__add" aria-label={`Add ${title}`} onClick={onAdd}>
+            <Icon name="add" size={20} />
+          </button>
+        )}
+      </div>
+      <Text as="div" variant="subheading" style={{ marginTop: 10 }}>{title}</Text>
+      <Text as="p" variant="body1" color="secondary">{description}</Text>
+    </div>
+  );
+}
+
+/** Shown in place of recommendations when all are applied or none exist. */
+export function SuggestionsComingCard() {
+  return (
+    <div className="eq-suggest">
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <AiAvatar size={18} />
+          <Text variant="caption" color="secondary">New suggestions coming…</Text>
+        </div>
+        <Text as="p" variant="bodyLarge" style={{ marginTop: 12 }}>More suggestions will show up here as I learn your calls</Text>
+      </div>
+      <Asset name="illustration-suggestions" size={112} />
+    </div>
+  );
+}
+
+export type PresetTint = 'red' | 'green' | 'orange';
+
+/** "Browse presets" card — emoji in a tinted circle, chevron, title, description. */
+export function PresetCard({ emoji, tint, title, description, onClick }: { emoji: string; tint: PresetTint; title: string; description: string; onClick?: () => void }) {
+  return (
+    <button type="button" className="eq-reset-btn eq-flow-card eq-preset" onClick={onClick}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span className="eq-preset__icon" style={{ background: `var(--eq-preset-tint-${tint})` }}><Emoji char={emoji} size={16} /></span>
+        <Icon name="chevron-right" size={22} color="var(--eq-text-placeholder)" />
+      </div>
+      <Text as="div" variant="subheading" style={{ marginTop: 12 }}>{title}</Text>
+      <Text as="p" variant="captionWrap" color="secondary">{description}</Text>
+    </button>
+  );
+}
+
+/**
+ * When / Do line of an instruction. Presets: sentence-case label on a flat chip. Active
+ * instructions (`upper`): WHEN / DO 13sp medium caps in a 24dp pill that fades from the tint
+ * (`gradient/when-chip`, `gradient/do-chip`) to transparent, text 13/18 beside it.
+ */
+export function WhenDoRow({ kind, children, upper = false }: { kind: 'when' | 'do'; children: ReactNode; upper?: boolean }) {
+  const label = kind === 'when' ? 'When' : 'Do';
+  if (upper) {
+    return (
+      <div className="eq-whendo eq-whendo--active">
+        <span className={`eq-whendo__pill eq-whendo__pill--${kind}`}>
+          <Text variant="caption" color="secondary" style={{ fontSize: 13, lineHeight: '16px', letterSpacing: '0.02em' }}>{label.toUpperCase()}</Text>
+        </span>
+        <Text as="p" variant="body1" color="primary" style={{ flex: 1, fontSize: 13, lineHeight: '18px' }}>{children}</Text>
+      </div>
+    );
+  }
+  return (
+    <div className="eq-whendo">
+      <span className={`eq-whendo__chip eq-whendo__chip--${kind}`}>
+        <Text variant="caption" color="tertiary" style={{ fontWeight: 400 }}>{label}</Text>
+      </span>
+      <Text as="p" variant="body1" color="primary" style={{ flex: 1 }}>{children}</Text>
+    </div>
+  );
+}
+
+export type Instruction = { id: string; title: string; when: string; do: string; source?: { emoji: string; label: string } };
+
+/** Preset instruction with an Apply action (preset detail screen). */
+export function PresetInstructionCard({ instruction, applied, onApply }: { instruction: Instruction; applied?: boolean; onApply?: () => void }) {
+  return (
+    <div className="eq-flow-card" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        <Text as="h3" variant="subheading" style={{ flex: 1 }}>{instruction.title}</Text>
+        {applied ? (
+          <span className="eq-applied"><Icon name="check" size={16} /><span className="eq-t-button-small">Applied</span></span>
+        ) : (
+          <Button size="sm" leadingIcon="add" onClick={onApply}>Apply</Button>
+        )}
+      </div>
+      <WhenDoRow kind="when">{instruction.when}</WhenDoRow>
+      <WhenDoRow kind="do">{instruction.do}</WhenDoRow>
+    </div>
+  );
+}
+
+/**
+ * Active instruction (Instructions screenshot, 328dp card): outlined card (radius 16, padding 17).
+ * Header: title 17/20 Bold + ⋮ overflow (Edit / Delete instruction); below it the outlined source
+ * pill (24 high: emoji 14 + `caption` text/secondary). Full-width divider, then WHEN and DO rows.
+ */
+export function InstructionCard({ instruction, onEdit, onDelete }: { instruction: Instruction; onEdit?: () => void; onDelete?: () => void }) {
+  return (
+    <div className="eq-instruction-card">
+      <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+        <Text as="h3" variant="subheading" style={{ flex: 1, minWidth: 0, fontSize: 17, lineHeight: '20px', fontWeight: 700, paddingTop: 2 }}>{instruction.title}</Text>
+        {(onEdit || onDelete) && (
+          <div style={{ margin: '-8px -12px 0 0' }}>
+            <OverflowMenu
+              label="Instruction options"
+              items={[
+                ...(onEdit ? [{ label: 'Edit', icon: 'edit' as const, onSelect: onEdit }] : []),
+                ...(onDelete ? [{ label: 'Delete instruction', icon: 'delete' as const, danger: true, onSelect: onDelete }] : []),
+              ]}
+            />
+          </div>
+        )}
+      </div>
+      {instruction.source && (
+        <span className="eq-source">
+          <Emoji char={instruction.source.emoji} size={12} />
+          <Text variant="caption" color="secondary">{instruction.source.label}</Text>
+        </span>
+      )}
+      <hr className="eq-divider" style={{ margin: '9px 0 17px' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <WhenDoRow kind="when" upper>{instruction.when}</WhenDoRow>
+        <WhenDoRow kind="do" upper>{instruction.do}</WhenDoRow>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Instruction preview inside the setup chat: the shared action-card body (note_stack icon on a white
+ * circle, title, When / Do lines, time) in the action card's white 8dp frame; optional ✅ reaction.
+ */
+export function InstructionPreview({ title, when, action, time, confirmed }: { title: string; when: ReactNode; action: ReactNode; time?: string; confirmed?: boolean }) {
+  return (
+    <div className="eq-preview-wrap">
+      <ActionCardBody icon="instructions" title={title} details={instructionLines(when, action)} time={time} />
+      {confirmed && (
+        <span className="eq-reaction" aria-label="Confirmed"><Emoji char="✅" size={18} /></span>
+      )}
+    </div>
+  );
+}
+
+/** Full-height sheet with a title row (orb + title + close) — the "Setting up instruction" chat. */
+export function FullSheet({ open, onClose, title, children, footer }: { open: boolean; onClose?: () => void; title: string; children: ReactNode; footer?: ReactNode }) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose?.();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+  return (
+    <div className={`eq-fullsheet ${open ? 'is-open' : ''}`} aria-hidden={!open}>
+      <div className="eq-fullsheet__scrim" onClick={onClose} />
+      <section className="eq-fullsheet__panel" role="dialog" aria-modal="true" aria-label={title}>
+        <header className="eq-fullsheet__head">
+          <AiAvatar size={32} />
+          <Text variant="subheading" style={{ flex: 1 }}>{title}</Text>
+          <IconButton icon="close" label="Close" variant="neutral" size={40} iconSize={22} onClick={onClose} />
+        </header>
+        <ChatWallpaper style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', scrollbarWidth: 'none' }}>{children}</div>
+          {footer && <div style={{ padding: '8px 16px 16px' }}>{footer}</div>}
+        </ChatWallpaper>
+      </section>
+    </div>
+  );
+}

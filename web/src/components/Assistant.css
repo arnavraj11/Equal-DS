@@ -1,0 +1,65 @@
+/* Global MYA (Global MYA design): the assistant sheet from the green orb. DM Sans only. */
+
+.eq-mya-sheet { position: relative; display: flex; flex-direction: column; background: var(--eq-sheet-bg); border-radius: 32px 32px 0 0; box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12); overflow: hidden; }
+.eq-mya-sheet.is-inline { border-radius: 32px; }
+.eq-mya-sheet.is-task { height: 82%; }
+.eq-status-sheet-layer .eq-mya-sheet { animation: eq-sheet-up var(--eq-duration-slow) var(--eq-easing-standard) both; }
+.eq-mya-sheet__body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+.eq-mya-sheet.is-task .eq-mya-sheet__body { background: var(--eq-chat-wallpaper-bg); }
+.eq-mya-sheet__footer { padding: 12px 16px 20px; }
+.eq-mya-sheet.is-task .eq-mya-sheet__footer { background: var(--eq-chat-wallpaper-bg); }
+
+.eq-mya-greeting { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 24px 24px 0; }
+
+.eq-mya-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 24px 16px 0; }
+.eq-mya-action { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 92px; padding: 12px 6px; border-radius: 16px; background: var(--eq-bg-surface); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); color: var(--eq-text-primary); }
+
+.eq-mya-chips { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding: 20px 16px 4px; }
+.eq-mya-chips > * { flex-shrink: 0; }
+
+.eq-mya-try { display: flex; flex-direction: column; gap: 14px; padding: 32px 32px 24px; }
+
+.eq-mya-input { display: flex; align-items: center; gap: 12px; }
+.eq-mya-field { flex: 1; min-width: 0; height: 48px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--eq-stroke-subtle); background: var(--eq-bg-surface); color: var(--eq-text-primary); font: inherit; outline: none; }
+.eq-mya-field.is-focus, .eq-mya-field:focus { border: 1.5px solid var(--eq-button-primary); }
+.eq-mya-field::placeholder { color: var(--eq-text-placeholder); }
+.eq-mya-mic { width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; background: var(--eq-gradient-voice-note); color: var(--eq-text-on-action); display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px color-mix(in srgb, var(--eq-button-primary) 30%, transparent); }
+.eq-mya-round { width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; background: var(--eq-bg-surface); display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+.eq-mya-voice-note { flex: 1; height: 52px; border-radius: 999px; background: var(--eq-gradient-voice-note); color: var(--eq-text-on-action); display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 16px color-mix(in srgb, var(--eq-button-primary) 30%, transparent); touch-action: none; }
+
+.eq-mya-pill { flex: 1; min-width: 0; height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 18px; border-radius: 999px; background: var(--eq-bg-surface); border: 1.5px solid var(--eq-action-stroke-unread); }
+.eq-mya-wave { margin-left: auto; display: inline-flex; align-items: center; gap: 2px; height: 24px; color: var(--eq-text-action); }
+.eq-mya-wave > span:not(.eq-mya-wave__dots) { width: 3px; border-radius: 2px; background: currentColor; transition: height 120ms linear; }
+.eq-mya-wave.is-cancel { color: var(--eq-text-danger); }
+.eq-mya-wave__dots { width: 160px; max-width: 100%; height: 3px; background: radial-gradient(circle, var(--eq-text-tertiary) 1.2px, transparent 1.4px) 0 50% / 6px 3px repeat-x; }
+.eq-mya-hold { display: flex; flex-direction: column; gap: 12px; }
+.eq-mya-hold .eq-mya-pill { flex: none; }
+
+.eq-mya-task { display: flex; align-items: center; gap: 12px; padding: 16px 16px 14px; background: var(--eq-bg-surface); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); position: relative; z-index: 1; }
+.eq-mya-task__close { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); background: var(--eq-bg-surface) !important; }
+
+.eq-mya-thinking { display: flex; align-items: center; gap: 10px; padding: 4px 4px; }
+.eq-mya-dots span { animation: eq-mya-dot 1.2s infinite; }
+.eq-mya-dots span:nth-child(2) { animation-delay: 0.2s; }
+.eq-mya-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes eq-mya-dot { 0%, 60%, 100% { opacity: 0.2; } 30% { opacity: 1; } }
+
+.eq-mya-replies { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.eq-mya-reply { height: 48px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--eq-bg-surface); border: 1px solid var(--eq-stroke-subtle); color: var(--eq-text-primary); }
+.eq-mya-reply.is-commit { background: var(--eq-gradient-chip-large); border-color: var(--eq-action-stroke-unread); }
+
+.eq-mya-done { position: absolute; left: -10px; bottom: -14px; width: 32px; height: 32px; border-radius: 50%; background: var(--eq-bg-surface); display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); font-size: 18px; }
+
+.eq-mya-keyboard { display: block; line-height: 0; }
+
+@media (prefers-reduced-motion: reduce) { .eq-mya-dots span { animation: none; opacity: 1; } .eq-status-sheet-layer .eq-mya-sheet { animation: none; } }
+
+.eq-carousel-dots { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 14px 0 2px; }
+.eq-carousel-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--eq-stroke-medium); }
+.eq-carousel-dots span.is-on { width: 11px; height: 11px; background: var(--eq-action-stroke-unread); }
+
+/* Opened from a chat's AI layer: stop below the status bar + chat header (52 + 64). */
+.eq-mya-sheet.is-in-chat { height: calc(100% - 112px); }
+.eq-mya-reply-card { border-radius: 16px; background: var(--eq-bg-surface); overflow: hidden; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); }
+.eq-mya-reply-card__action { width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--eq-text-action); border-top: 1px solid var(--eq-stroke-subtle); font-size: 14px; }
+.eq-mya-chips .eq-chip-lg:disabled { opacity: 0.45; }
