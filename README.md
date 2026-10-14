@@ -90,3 +90,7 @@ The site's *Screens & flows* section has every state of the Profile, Addresses, 
 1. Compose screens from components in `web/src/screens/Screens.tsx` (every screen uses only DS components).
 2. Wire navigation like `web/src/screens/Prototype.tsx` (a simple route stack plus sheets/toasts as overlays).
 3. Add its states to `site/src/pages/Flow.tsx` so they're reviewable on the site in light and dark.
+
+## Ownership
+
+Copyright © 2026 Equal AI. All rights reserved. Created and maintained by **Arnav Raj** ([arnav@equal.in](mailto:arnav@equal.in)). See [LICENSE](LICENSE) and [AUTHORS.md](AUTHORS.md).
